@@ -1,0 +1,20 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: codearena_x
+
+  # API and client images added when Dockerfiles are finalized in DevOps step.
+  # api:
+  #   build: ./server
+  #   ports: ["5000:5000"]
+  #   env_file: .env
+  #   depends_on: [mongo]
+
+volumes:
+  mongo_data:

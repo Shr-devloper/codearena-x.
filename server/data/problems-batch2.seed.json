@@ -1,0 +1,617 @@
+{
+  "version": 1,
+  "batch": 2,
+  "note": "Recursion/Backtracking, DP, Graphs, Trees, Sorting & Searching, Stack, Greedy — Batch 2 of 100-problem bank",
+  "problems": [
+    {
+      "title": "N-Queens — Count Distinct Solutions",
+      "slug": "n-queens-count-solutions-b2",
+      "description": "Place `n` queens on an `n×n` chessboard so that no two share a row, column, or diagonal. Count **how many** distinct full placements exist (rotations/reflections count separately).",
+      "difficulty": "hard",
+      "tags": ["Recursion & Backtracking", "Arrays"],
+      "inputFormat": "One integer `n` (1 ≤ n ≤ 9).",
+      "outputFormat": "One integer — the number of valid queen placements.",
+      "constraints": "1 ≤ n ≤ 9. Answer fits in 32-bit signed int.",
+      "hints": [
+        "Place queens row by row; track occupied columns and both diagonal directions.",
+        "Use sets or bitmasks for O(1) conflict checks when n is small.",
+        "Prune as soon as a row has no legal column — classic backtracking."
+      ],
+      "sampleTestCases": [
+        { "input": "1", "expectedOutput": "1" },
+        { "input": "4", "expectedOutput": "2" }
+      ],
+      "hiddenTestCases": [
+        { "input": "2", "expectedOutput": "0" },
+        { "input": "3", "expectedOutput": "0" },
+        { "input": "5", "expectedOutput": "10" },
+        { "input": "8", "expectedOutput": "92" }
+      ],
+      "starterCode": {
+        "javascript": "const n=+require('fs').readFileSync(0,'utf-8').trim();\n",
+        "python": "n=int(open(0).read().strip())\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){int n; cin>>n; return 0;}\n"
+      }
+    },
+    {
+      "title": "Well-Formed Parentheses — Count (Catalan)",
+      "slug": "count-balanced-parentheses-strings-b2",
+      "description": "For a given `n`, how many **distinct** strings of `n` pairs of parentheses are **balanced** (well-formed)? This is the `n`th Catalan number.",
+      "difficulty": "medium",
+      "tags": ["Dynamic Programming", "Recursion & Backtracking", "Strings"],
+      "inputFormat": "One integer `n` (0 ≤ n ≤ 12). Use Catalan(0)=1 (empty string).",
+      "outputFormat": "One integer — number of valid length-`2n` parenthesis strings.",
+      "constraints": "0 ≤ n ≤ 12. Result fits in 64-bit.",
+      "hints": [
+        "Catalan satisfies C(n+1) = sum_{i=0..n} C(i)*C(n-i).",
+        "Or: first return to balance splits the string into two independent balanced parts.",
+        "Dynamic programming on n avoids recomputing smaller Catalan values."
+      ],
+      "sampleTestCases": [
+        { "input": "2", "expectedOutput": "2" },
+        { "input": "3", "expectedOutput": "5" }
+      ],
+      "hiddenTestCases": [
+        { "input": "0", "expectedOutput": "1" },
+        { "input": "1", "expectedOutput": "1" },
+        { "input": "4", "expectedOutput": "14" },
+        { "input": "6", "expectedOutput": "132" }
+      ],
+      "starterCode": {
+        "javascript": "const n=+require('fs').readFileSync(0,'utf-8').trim();\n",
+        "python": "n=int(open(0).read().strip())\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){int n; cin>>n; return 0;}\n"
+      }
+    },
+    {
+      "title": "Word Search on a Grid",
+      "slug": "word-search-grid-exists-b2",
+      "description": "Given a character grid and a word, determine if the word can be built by moving **up/down/left/right** from cell to cell without reusing a cell in the same search. Each step must match the next character.",
+      "difficulty": "medium",
+      "tags": ["Recursion & Backtracking", "Strings", "Graphs"],
+      "inputFormat": "Line 1: `R C`. Next `R` lines: `C` characters each (letters A–Z or a–z). Last line: the word (non-empty).",
+      "outputFormat": "Print `YES` if the word exists, else `NO`.",
+      "constraints": "1 ≤ R,C ≤ 6, word length ≤ 15. Grid and word use ASCII letters only.",
+      "hints": [
+        "DFS from each cell that matches the first letter; mark visited, then unmark on backtrack.",
+        "Prune when the next character has no unvisited neighbor.",
+        "Grid is tiny — recursion depth is bounded by word length."
+      ],
+      "sampleTestCases": [
+        {
+          "input": "3 4\nABCE\nSFCS\nADEE\nSEE",
+          "expectedOutput": "YES"
+        },
+        {
+          "input": "2 2\naa\naa\naaa",
+          "expectedOutput": "YES"
+        }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 1\na\nb", "expectedOutput": "NO" },
+        { "input": "1 1\na\na", "expectedOutput": "YES" },
+        {
+          "input": "3 4\nABCE\nSFCS\nADEE\nABCCED",
+          "expectedOutput": "YES"
+        }
+      ],
+      "starterCode": {
+        "javascript": "const fs=require('fs'); const q=fs.readFileSync(0,'utf-8').trim().split('\\n');\n",
+        "python": "import sys\nlines=sys.stdin.read().splitlines()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Minimum Path Sum in a Grid",
+      "slug": "minimum-path-sum-grid-b2",
+      "description": "You start at the top-left of a grid of non-negative costs and may only move **right** or **down**. Minimize the sum of cells on a path to the bottom-right.",
+      "difficulty": "medium",
+      "tags": ["Dynamic Programming", "Matrix", "Arrays"],
+      "inputFormat": "Line 1: `M N`. Next `M` lines: `N` non-negative integers each.",
+      "outputFormat": "One integer — minimum path sum.",
+      "constraints": "1 ≤ M,N ≤ 200, 0 ≤ cell ≤ 10^4",
+      "hints": [
+        "dp[i][j] = cell[i][j] + min(dp[i-1][j], dp[i][j-1]).",
+        "Initialize first row and first column as prefix sums along edges.",
+        "O(MN) time, O(min(M,N)) space possible with rolling array."
+      ],
+      "sampleTestCases": [
+        {
+          "input": "3 3\n1 3 1\n1 5 1\n4 2 1",
+          "expectedOutput": "7"
+        },
+        {
+          "input": "2 2\n1 2\n1 1",
+          "expectedOutput": "3"
+        }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 1\n5", "expectedOutput": "5" },
+        { "input": "2 3\n1 2 3\n4 5 6", "expectedOutput": "12" },
+        { "input": "3 2\n1 10\n2 1\n1 1", "expectedOutput": "5" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Edit Distance (Levenshtein)",
+      "slug": "edit-distance-levenshtein-b2",
+      "description": "Given two strings, find the minimum number of single-character **insertions**, **deletions**, or **substitutions** to turn the first string into the second.",
+      "difficulty": "medium",
+      "tags": ["Dynamic Programming", "Strings"],
+      "inputFormat": "Line 1: string A. Line 2: string B (lowercase letters, may be empty).",
+      "outputFormat": "One integer — minimum operations.",
+      "constraints": "0 ≤ |A|,|B| ≤ 500, lowercase a–z only.",
+      "hints": [
+        "dp[i][j] = cost to convert A[0..i) to B[0..j).",
+        "If A[i-1]==B[j-1], dp[i][j]=dp[i-1][j-1]; else 1 + min of three neighbors.",
+        "Base cases: empty string requires |other| insertions or deletions."
+      ],
+      "sampleTestCases": [
+        { "input": "horse\nros", "expectedOutput": "3" },
+        { "input": "abc\nabc", "expectedOutput": "0" }
+      ],
+      "hiddenTestCases": [
+        { "input": "\na", "expectedOutput": "1" },
+        { "input": "a\n", "expectedOutput": "1" },
+        { "input": "leetcode\netco", "expectedOutput": "4" },
+        { "input": "aaaa\nbbbb", "expectedOutput": "4" }
+      ],
+      "starterCode": {
+        "javascript": "const fs=require('fs'); const [a,b]=fs.readFileSync(0,'utf-8').trim().split('\\n');\n",
+        "python": "import sys\nlines=sys.stdin.read().splitlines()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Longest Palindromic Subsequence Length",
+      "slug": "longest-palindromic-subsequence-b2",
+      "description": "Return the length of the **longest subsequence** of `s` that reads the same forwards and backwards (not necessarily contiguous).",
+      "difficulty": "medium",
+      "tags": ["Dynamic Programming", "Strings"],
+      "inputFormat": "One line: string `s` (lowercase letters).",
+      "outputFormat": "One integer — LPS length.",
+      "constraints": "1 ≤ |s| ≤ 1000",
+      "hints": [
+        "For interval [i,j], if s[i]==s[j] then length is 2 + answer for (i+1,j-1), else max of (i+1,j) and (i,j-1).",
+        "Fill DP by increasing length of substring.",
+        "Equivalent to LCS(s, reverse(s))."
+      ],
+      "sampleTestCases": [
+        { "input": "bbbab", "expectedOutput": "4" },
+        { "input": "aaa", "expectedOutput": "3" }
+      ],
+      "hiddenTestCases": [
+        { "input": "a", "expectedOutput": "1" },
+        { "input": "ab", "expectedOutput": "1" },
+        { "input": "character", "expectedOutput": "5" },
+        { "input": "racecar", "expectedOutput": "7" }
+      ],
+      "starterCode": {
+        "javascript": "const s=require('fs').readFileSync(0,'utf-8').trim();\n",
+        "python": "s=open(0).read().strip()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Palindrome Partitioning II — Minimum Cuts",
+      "slug": "palindrome-partition-min-cuts-b2",
+      "description": "Cut string `s` into palindrome substrings. What is the **minimum number of cuts** in the gaps between characters? A string of length 1 needs **0** cuts.",
+      "difficulty": "hard",
+      "tags": ["Dynamic Programming", "Strings"],
+      "inputFormat": "One line: string `s` (lowercase letters).",
+      "outputFormat": "One integer — minimum cuts.",
+      "constraints": "1 ≤ |s| ≤ 500",
+      "hints": [
+        "First precompute isPalindrome[i][j] for all intervals.",
+        "dp[j] = min cuts for prefix ending at j; try every palindrome ending at j.",
+        "O(n^3) is OK for n=500 with careful constant factor; O(n^2) possible with optimized transition."
+      ],
+      "sampleTestCases": [
+        { "input": "aab", "expectedOutput": "1" },
+        { "input": "leet", "expectedOutput": "2" }
+      ],
+      "hiddenTestCases": [
+        { "input": "a", "expectedOutput": "0" },
+        { "input": "ab", "expectedOutput": "1" },
+        { "input": "abab", "expectedOutput": "1" },
+        { "input": "noon", "expectedOutput": "0" }
+      ],
+      "starterCode": {
+        "javascript": "const s=require('fs').readFileSync(0,'utf-8').trim();\n",
+        "python": "s=open(0).read().strip()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Target Sum — Number of Assignments",
+      "slug": "target-sum-plus-minus-ways-b2",
+      "description": "You have an array of **positive** integers. Place `+` or `-` before each so the expression equals `target`. Count how many **different** sign assignments work.",
+      "difficulty": "medium",
+      "tags": ["Dynamic Programming", "Arrays"],
+      "inputFormat": "Line 1: `n` and `target`. Line 2: `n` positive integers.",
+      "outputFormat": "One integer — number of ways (fits 32-bit for given limits).",
+      "constraints": "1 ≤ n ≤ 100, 1 ≤ nums[i] ≤ 1000, |target| ≤ 1000. Sum of nums ≤ 2000.",
+      "hints": [
+        "Let S = sum(nums). You need subset P with 2P - S = target, i.e. P = (S+target)/2.",
+        "If (S+target) is odd or negative P is impossible, answer 0.",
+        "Classic bounded/unbounded-style knapsack counting on subset sum P."
+      ],
+      "sampleTestCases": [
+        { "input": "5 3\n1 1 1 1 1", "expectedOutput": "5" },
+        { "input": "3 2\n1 2 3", "expectedOutput": "1" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 5\n5", "expectedOutput": "1" },
+        { "input": "2 0\n2 4", "expectedOutput": "0" },
+        { "input": "4 0\n1 1 1 1", "expectedOutput": "6" },
+        { "input": "3 6\n1 2 3", "expectedOutput": "1" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Dungeon Game — Minimum Starting HP",
+      "slug": "dungeon-game-minimum-hp-b2",
+      "description": "A knight crosses an `M×N` dungeon. Each cell changes HP (negative = damage, positive = orb). He needs **at least 1** HP at every moment, including exit. From `(0,0)` moving only right/down, what is the **minimum initial HP** at start?",
+      "difficulty": "hard",
+      "tags": ["Dynamic Programming", "Matrix", "Arrays"],
+      "inputFormat": "Line 1: `M N`. Next `M` lines: `N` integers (each in [-1000,1000]).",
+      "outputFormat": "One positive integer — minimum starting HP.",
+      "constraints": "1 ≤ M,N ≤ 200",
+      "hints": [
+        "Work backwards from the princess cell: need at least 1 HP after the last cell.",
+        "dp[i][j] = min HP entering (i,j) to survive to the end.",
+        "Transition: after cell value, HP must stay ≥ 1 when stepping to the better of right/down."
+      ],
+      "sampleTestCases": [
+        {
+          "input": "3 3\n-2 -3 3\n-5 -10 1\n10 30 -5",
+          "expectedOutput": "7"
+        }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 1\n0", "expectedOutput": "1" },
+        { "input": "1 2\n0 0", "expectedOutput": "1" },
+        { "input": "2 2\n1 -3\n2 0", "expectedOutput": "2" },
+        { "input": "1 3\n-2 -3 -5", "expectedOutput": "11" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Maximal Square of Ones",
+      "slug": "maximal-square-binary-matrix-b2",
+      "description": "Given a binary matrix (`0`/`1`), find the **area** (number of cells) of the largest square containing only `1`s.",
+      "difficulty": "medium",
+      "tags": ["Dynamic Programming", "Matrix", "Arrays"],
+      "inputFormat": "Line 1: `M N`. Next `M` lines: `N` integers 0 or 1.",
+      "outputFormat": "One integer — area of largest all-1 square.",
+      "constraints": "1 ≤ M,N ≤ 300",
+      "hints": [
+        "dp[i][j] = side length of largest square ending at (i,j) if matrix[i][j]==1.",
+        "Recurrence: 1 + min of three neighbors when cell is 1.",
+        "Track max side, answer is maxSide^2."
+      ],
+      "sampleTestCases": [
+        {
+          "input": "4 5\n1 0 1 0 0\n1 0 1 1 1\n1 1 1 1 1\n1 0 0 1 0",
+          "expectedOutput": "4"
+        }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 1\n0", "expectedOutput": "0" },
+        { "input": "1 1\n1", "expectedOutput": "1" },
+        { "input": "2 2\n1 1\n1 1", "expectedOutput": "4" },
+        { "input": "2 3\n1 0 0\n1 0 0", "expectedOutput": "1" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Is Graph Bipartite?",
+      "slug": "graph-bipartite-check-b2",
+      "description": "Undirected simple graph on nodes `0..n-1`. Determine whether vertices can be **2-colored** so every edge connects different colors.",
+      "difficulty": "medium",
+      "tags": ["Graphs", "BFS"],
+      "inputFormat": "Line 1: `n m`. Next `m` lines: `u v` (0-based, undirected, no self-loops).",
+      "outputFormat": "`YES` if bipartite, else `NO`.",
+      "constraints": "1 ≤ n ≤ 500, 0 ≤ m ≤ n(n-1)/2",
+      "hints": [
+        "BFS/DFS coloring; on conflict, not bipartite.",
+        "Graph may be disconnected — try every component.",
+        "Self-loops are excluded; parallel edges can be ignored or treated as one."
+      ],
+      "sampleTestCases": [
+        { "input": "4 4\n0 1\n1 2\n2 3\n3 0", "expectedOutput": "YES" },
+        { "input": "3 3\n0 1\n1 2\n2 0", "expectedOutput": "NO" }
+      ],
+      "hiddenTestCases": [
+        { "input": "2 1\n0 1", "expectedOutput": "YES" },
+        { "input": "1 0", "expectedOutput": "YES" },
+        { "input": "5 4\n0 1\n1 2\n2 3\n3 4", "expectedOutput": "YES" },
+        { "input": "4 5\n0 1\n1 2\n2 3\n3 0\n0 2", "expectedOutput": "NO" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Undirected Graph — Cycle Detection",
+      "slug": "undirected-graph-has-cycle-b2",
+      "description": "Simple undirected graph on `0..n-1`. Print `YES` if **any** cycle exists, `NO` if the graph is a forest (acyclic).",
+      "difficulty": "medium",
+      "tags": ["Graphs", "DFS"],
+      "inputFormat": "Line 1: `n m`. Next `m` lines: `u v` (0-based).",
+      "outputFormat": "`YES` or `NO`.",
+      "constraints": "1 ≤ n ≤ 500, 0 ≤ m ≤ 2000",
+      "hints": [
+        "DFS: if you reach a visited neighbor that is not the parent, you found a cycle.",
+        "Alternatively: in each tree component, edges = nodes - 1; extra edge implies cycle.",
+        "Handle isolated vertices and multiple components."
+      ],
+      "sampleTestCases": [
+        { "input": "3 2\n0 1\n1 2", "expectedOutput": "NO" },
+        { "input": "3 3\n0 1\n1 2\n2 0", "expectedOutput": "YES" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 0", "expectedOutput": "NO" },
+        { "input": "4 3\n0 1\n2 3\n1 3", "expectedOutput": "NO" },
+        { "input": "4 3\n0 1\n1 2\n2 3", "expectedOutput": "NO" },
+        { "input": "2 2\n0 1\n0 1", "expectedOutput": "YES" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Connected Components (Undirected)",
+      "slug": "count-connected-components-b2",
+      "description": "Count the number of **connected components** in an undirected graph on nodes `0..n-1`.",
+      "difficulty": "easy",
+      "tags": ["Graphs", "DFS"],
+      "inputFormat": "Line 1: `n m`. Next `m` lines: `u v`.",
+      "outputFormat": "One integer — component count.",
+      "constraints": "1 ≤ n ≤ 1000, 0 ≤ m ≤ 5000",
+      "hints": [
+        "Union-Find or DFS from unvisited nodes; each DFS start is a new component.",
+        "Isolated vertices are their own components.",
+        "Parallel edges do not change connectivity."
+      ],
+      "sampleTestCases": [
+        { "input": "5 3\n0 1\n1 2\n3 4", "expectedOutput": "2" },
+        { "input": "4 0", "expectedOutput": "4" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 0", "expectedOutput": "1" },
+        { "input": "6 5\n0 1\n1 2\n2 0\n3 4\n4 5", "expectedOutput": "2" },
+        { "input": "3 2\n0 1\n1 2", "expectedOutput": "1" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Is the Graph a Tree?",
+      "slug": "is-graph-tree-nodes-edges-b2",
+      "description": "A **tree** on `n` labeled nodes is connected and has exactly `n-1` edges. Given an undirected simple graph, decide if it is a tree.",
+      "difficulty": "medium",
+      "tags": ["Graphs", "Trees"],
+      "inputFormat": "Line 1: `n m`. Next `m` lines: `u v` (0-based).",
+      "outputFormat": "`YES` if the graph is a tree, else `NO`.",
+      "constraints": "1 ≤ n ≤ 500, 0 ≤ m ≤ n(n-1)/2",
+      "hints": [
+        "Necessary: m = n-1 and graph is connected (for n≥1).",
+        "If m ≠ n-1, it cannot be a tree (unless n=1 and m=0 special case).",
+        "Use BFS/DFS from 0 to verify connectivity when m = n-1."
+      ],
+      "sampleTestCases": [
+        { "input": "4 3\n0 1\n1 2\n2 3", "expectedOutput": "YES" },
+        { "input": "4 4\n0 1\n1 2\n2 3\n3 0", "expectedOutput": "NO" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 0", "expectedOutput": "YES" },
+        { "input": "3 2\n0 1\n1 2", "expectedOutput": "YES" },
+        { "input": "3 1\n0 1", "expectedOutput": "NO" },
+        { "input": "3 3\n0 1\n1 2\n0 2", "expectedOutput": "NO" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Tree Diameter (Unweighted)",
+      "slug": "tree-diameter-unweighted-b2",
+      "description": "Given a **tree** with `n` nodes and `n-1` undirected edges, the **diameter** is the maximum distance (in edges) between any two nodes. Output that diameter.",
+      "difficulty": "medium",
+      "tags": ["Trees", "Graphs", "DFS"],
+      "inputFormat": "Line 1: `n`. Next `n-1` lines: `u v` (0-based).",
+      "outputFormat": "One integer — diameter length (number of edges on longest path).",
+      "constraints": "2 ≤ n ≤ 2000",
+      "hints": [
+        "Two BFS/DFS: from any node find farthest A; from A find farthest distance D.",
+        "That D is the diameter (standard property of trees).",
+        "O(n) time."
+      ],
+      "sampleTestCases": [
+        { "input": "5\n0 1\n1 2\n1 3\n3 4", "expectedOutput": "3" },
+        { "input": "2\n0 1", "expectedOutput": "1" }
+      ],
+      "hiddenTestCases": [
+        { "input": "4\n0 1\n1 2\n2 3", "expectedOutput": "3" },
+        { "input": "6\n0 1\n0 2\n0 3\n3 4\n3 5", "expectedOutput": "3" },
+        { "input": "3\n0 1\n1 2", "expectedOutput": "2" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Aggressive Cows (Maximize Minimum Distance)",
+      "slug": "aggressive-cows-stalls-b2",
+      "description": "`n` stalls lie on a number line at given coordinates (unsorted). Place `c` cows in stalls so the **minimum distance** between any two cows is as large as possible. Output that maximum achievable minimum distance.",
+      "difficulty": "hard",
+      "tags": ["Sorting & Searching", "Arrays", "Binary Search"],
+      "inputFormat": "Line 1: `n c`. Line 2: `n` distinct integers — stall positions (0 ≤ pos ≤ 10^9).",
+      "outputFormat": "One integer — maximum minimum spacing between cows.",
+      "constraints": "2 ≤ c ≤ n ≤ 10^5",
+      "hints": [
+        "Sort stalls; binary search the answer `d`: can we place all cows with pairwise distance ≥ d?",
+        "Greedy placement: put first cow in leftmost stall, then next cow in earliest stall at least `d` away.",
+        "Feasibility check is O(n) for fixed d."
+      ],
+      "sampleTestCases": [
+        { "input": "5 3\n1 2 8 4 9", "expectedOutput": "3" },
+        { "input": "5 2\n1 2 3 4 1000000000", "expectedOutput": "999999999" }
+      ],
+      "hiddenTestCases": [
+        { "input": "3 2\n1 2 3", "expectedOutput": "2" },
+        { "input": "4 2\n5 6 7 8", "expectedOutput": "3" },
+        { "input": "3 3\n10 20 30", "expectedOutput": "10" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Koko Eating Bananas",
+      "slug": "koko-eating-bananas-b2",
+      "description": "Koko has `n` piles of bananas; pile `i` has `piles[i]` bananas. Guards return in `H` hours. Each hour she chooses one pile and eats `k` bananas from it (or all remaining if fewer). What is the **minimum integer `k`** per hour so she finishes all piles within `H` hours?",
+      "difficulty": "medium",
+      "tags": ["Sorting & Searching", "Arrays", "Binary Search"],
+      "inputFormat": "Line 1: `n H`. Line 2: `n` positive integers — pile sizes.",
+      "outputFormat": "One integer — minimum eating speed `k`.",
+      "constraints": "1 ≤ n ≤ 10^5, 1 ≤ piles[i] ≤ 10^9, n ≤ H ≤ 10^9",
+      "hints": [
+        "If `k` works, any larger `k` also works — monotonic predicate.",
+        "Binary search `k` from 1 to max(piles).",
+        "Hours needed for pile x is ceil(x/k); sum must be ≤ H."
+      ],
+      "sampleTestCases": [
+        { "input": "4 8\n3 6 7 11", "expectedOutput": "4" },
+        { "input": "3 6\n30 11 23", "expectedOutput": "23" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 1\n100", "expectedOutput": "100" },
+        { "input": "3 8\n1 2 3", "expectedOutput": "1" },
+        { "input": "2 5\n4 9", "expectedOutput": "3" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Find Peak Index (Strict Peak)",
+      "slug": "find-peak-index-strict-b2",
+      "description": "Array `nums` length `n`. Imagine `nums[-1] = nums[n] = -∞`. Return the **smallest** index `i` such that `nums[i] > nums[i-1]` and `nums[i] > nums[i+1]`. A **strict** peak always exists under the given constraints.",
+      "difficulty": "medium",
+      "tags": ["Arrays", "Binary Search", "Sorting & Searching"],
+      "inputFormat": "Line 1: `n`. Line 2: `n` integers — strictly positive values with at least one strict interior peak.",
+      "outputFormat": "One integer — smallest valid peak index (0-based).",
+      "constraints": "3 ≤ n ≤ 10^5, 1 ≤ nums[i] ≤ 10^9. Test data guarantees a strict peak exists.",
+      "hints": [
+        "Scan left to right and return the first index where the value is greater than both neighbors.",
+        "Binary search also works: compare mid with mid+1 to shrink toward a peak.",
+        "Sentinel -∞ at the ends is conceptual only — it is not in the input."
+      ],
+      "sampleTestCases": [
+        { "input": "4\n1 2 3 1", "expectedOutput": "2" },
+        { "input": "5\n1 2 1 2 1", "expectedOutput": "1" }
+      ],
+      "hiddenTestCases": [
+        { "input": "3\n1 3 2", "expectedOutput": "1" },
+        { "input": "5\n1 2 3 4 3", "expectedOutput": "3" },
+        { "input": "7\n5 4 3 2 1 2 3", "expectedOutput": "0" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Largest Rectangle in Histogram",
+      "slug": "largest-rectangle-histogram-b2",
+      "description": "Given non-negative bar heights in order, find the **maximum area** of a rectangle aligned to the x-axis that fits under the histogram.",
+      "difficulty": "hard",
+      "tags": ["Stack & Queue", "Arrays"],
+      "inputFormat": "Line 1: `n`. Line 2: `n` non-negative integers — heights.",
+      "outputFormat": "One integer — maximum rectangle area.",
+      "constraints": "1 ≤ n ≤ 2·10^5, 0 ≤ height ≤ 10^4",
+      "hints": [
+        "Monotonic stack of indices with increasing heights.",
+        "When popping, compute area with popped bar as shortest height.",
+        "Append 0 height at end to flush the stack."
+      ],
+      "sampleTestCases": [
+        { "input": "6\n2 1 5 6 2 3", "expectedOutput": "10" },
+        { "input": "1\n5", "expectedOutput": "5" }
+      ],
+      "hiddenTestCases": [
+        { "input": "3\n2 2 2", "expectedOutput": "6" },
+        { "input": "4\n1 2 3 4", "expectedOutput": "6" },
+        { "input": "5\n5 4 3 2 1", "expectedOutput": "9" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Jump Game II — Minimum Jumps",
+      "slug": "jump-game-ii-min-jumps-b2",
+      "description": "Array `nums` of non-negative integers; from index `i` you may jump at most `nums[i]` steps forward. Start at index `0`. Reach the last index in the **minimum number of jumps**. It is guaranteed that the last index is reachable.",
+      "difficulty": "medium",
+      "tags": ["Greedy", "Arrays"],
+      "inputFormat": "Line 1: `n`. Line 2: `n` non-negative integers.",
+      "outputFormat": "One integer — minimum jumps.",
+      "constraints": "1 ≤ n ≤ 10^4, 0 ≤ nums[i] ≤ 1000. Last index always reachable.",
+      "hints": [
+        "Greedy layer BFS: extend farthest reachable with current jump budget.",
+        "When you exhaust the current layer, increment jumps and start next layer.",
+        "O(n) single pass."
+      ],
+      "sampleTestCases": [
+        { "input": "5\n2 3 1 1 4", "expectedOutput": "2" },
+        { "input": "2\n1 0", "expectedOutput": "1" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1\n0", "expectedOutput": "0" },
+        { "input": "5\n1 2 3 4 5", "expectedOutput": "3" },
+        { "input": "6\n2 3 1 2 0 1", "expectedOutput": "3" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    }
+  ]
+}

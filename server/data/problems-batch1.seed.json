@@ -1,0 +1,590 @@
+{
+  "version": 1,
+  "batch": 1,
+  "note": "Arrays + Strings — Batch 1 of 100-problem bank",
+  "problems": [
+    {
+      "title": "Best Time to Buy and Sell Stock (One Transaction)",
+      "slug": "best-time-buy-sell-stock-once",
+      "description": "You are given daily prices of a stock. Choose **one** buy day and **one** later sell day to **maximize profit**. If no profit is possible, the answer is `0`.",
+      "difficulty": "easy",
+      "tags": ["Arrays", "Greedy"],
+      "inputFormat": "Line 1: `n`. Line 2: `n` non-negative integers — prices in order.",
+      "outputFormat": "One integer — maximum achievable profit.",
+      "constraints": "1 ≤ n ≤ 10^5, 0 ≤ price ≤ 10^4",
+      "hints": [
+        "Track the minimum price seen so far while scanning left to right.",
+        "Candidate profit at day i is price[i] minus that minimum.",
+        "O(n) one pass; no need to try every pair."
+      ],
+      "sampleTestCases": [
+        { "input": "6\n7 1 5 3 6 4", "expectedOutput": "5" },
+        { "input": "2\n7 6", "expectedOutput": "0" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1\n5", "expectedOutput": "0" },
+        { "input": "3\n2 4 1", "expectedOutput": "2" },
+        { "input": "4\n1 2 3 4", "expectedOutput": "3" },
+        { "input": "5\n3 3 3 3 3", "expectedOutput": "0" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number); const n=a[0], p=a.slice(1,1+n);\n",
+        "python": "d=list(map(int,open(0).read().split())); n=d[0]; p=d[1:1+n]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){int n; cin>>n; return 0;}\n"
+      }
+    },
+    {
+      "title": "Count Subarrays with Sum Exactly K",
+      "slug": "count-subarrays-sum-equals-k",
+      "description": "Given an integer array (which may contain negatives) and an integer `k`, count the number of **contiguous** subarrays whose elements sum to **exactly** `k`.",
+      "difficulty": "medium",
+      "tags": ["Arrays", "Hash Table", "Prefix Sum"],
+      "inputFormat": "Line 1: `n` and `k`. Line 2: `n` integers.",
+      "outputFormat": "One integer — number of subarrays.",
+      "constraints": "1 ≤ n ≤ 2·10^4, |nums[i]| ≤ 10^3, |k| ≤ 10^7",
+      "hints": [
+        "Prefix sum P[i]; subarray sum (i,j] = P[j]-P[i].",
+        "For each j, count how many earlier i have P[i] = P[j] - k.",
+        "Hash map frequency of prefix sums; watch prefix 0 before the array starts."
+      ],
+      "sampleTestCases": [
+        { "input": "4 2\n1 1 1 1", "expectedOutput": "3" },
+        { "input": "3 3\n1 2 3", "expectedOutput": "2" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 0\n0", "expectedOutput": "1" },
+        { "input": "3 0\n1 -1 0", "expectedOutput": "3" },
+        { "input": "2 5\n5 5", "expectedOutput": "1" },
+        { "input": "4 2\n1 -1 1 -1", "expectedOutput": "4" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys\nd=list(map(int,sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Find All Numbers Disappeared in an Array",
+      "slug": "find-disappeared-numbers-array",
+      "description": "You have an array of `n` integers where each value is in `[1, n]`. Some values may appear twice, others once. List all integers in `[1,n]` that **do not** appear in the array. Print them in **ascending** order, space-separated.",
+      "difficulty": "easy",
+      "tags": ["Arrays", "Hash Table"],
+      "inputFormat": "Line 1: `n`. Line 2: `n` integers in `[1,n]`.",
+      "outputFormat": "Space-separated missing numbers (or empty line if none).",
+      "constraints": "1 ≤ n ≤ 10^5",
+      "hints": [
+        "Negate index marking or use a boolean array of size n+1.",
+        "Cycle sort / place each number x at index x-1 is O(n) in-place.",
+        "Avoid O(n) extra space with clever sign flipping on indices."
+      ],
+      "sampleTestCases": [
+        { "input": "8\n4 3 2 7 8 2 3 1", "expectedOutput": "5 6" },
+        { "input": "2\n1 1", "expectedOutput": "2" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1\n1", "expectedOutput": "" },
+        { "input": "5\n1 2 3 4 5", "expectedOutput": "" },
+        { "input": "3\n2 2 2", "expectedOutput": "1 3" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number); const n=a[0], nums=a.slice(1,1+n);\n",
+        "python": "d=list(map(int,open(0).read().split())); n=d[0]; nums=d[1:1+n]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Set Matrix Zeroes",
+      "slug": "set-matrix-zeroes-batch1",
+      "description": "Given an `m×n` matrix of integers, if an element is `0`, set its **entire row and column** to `0`. Print the transformed matrix: first line `m n`, then `m` lines with `n` space-separated integers.",
+      "difficulty": "medium",
+      "tags": ["Arrays", "Matrix"],
+      "inputFormat": "Line 1: `m` `n`. Next `m` lines: `n` integers each.",
+      "outputFormat": "Line 1: `m` `n`. Then `m` lines of transformed rows.",
+      "constraints": "1 ≤ m,n ≤ 200, |value| ≤ 1000",
+      "hints": [
+        "Use first row/column as markers with a flag for whether row0/col0 should zero.",
+        "Two-pass: mark rows/cols to zero, then apply.",
+        "O(1) extra space beyond output is achievable."
+      ],
+      "sampleTestCases": [
+        {
+          "input": "3 4\n1 1 1 1\n1 0 1 1\n1 1 1 1",
+          "expectedOutput": "3 4\n1 0 1 1\n0 0 0 0\n1 0 1 1"
+        }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 1\n0", "expectedOutput": "1 1\n0" },
+        { "input": "2 2\n1 2\n3 4", "expectedOutput": "2 2\n1 2\n3 4" },
+        { "input": "2 3\n0 1 2\n3 4 5", "expectedOutput": "2 3\n0 0 0\n0 4 5" }
+      ],
+      "starterCode": {
+        "javascript": "const fs=require('fs'); const L=fs.readFileSync(0,'utf-8').trim().split('\\n');\n",
+        "python": "import sys\nL=sys.stdin.read().splitlines()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Spiral Order Matrix",
+      "slug": "spiral-order-matrix-batch1",
+      "description": "Traverse an `m×n` matrix in **clockwise spiral** order starting at the top-left. Print all elements in visit order, space-separated on **one** line.",
+      "difficulty": "medium",
+      "tags": ["Arrays", "Matrix", "Simulation"],
+      "inputFormat": "Line 1: `m` `n`. Next `m` lines: `n` integers.",
+      "outputFormat": "One line — spiral sequence, space-separated.",
+      "constraints": "1 ≤ m,n ≤ 30",
+      "hints": [
+        "Maintain top, bottom, left, right boundaries and shrink after each edge.",
+        "Handle last row/column carefully when m≠n to avoid duplicates.",
+        "Simulate direction: right, down, left, up."
+      ],
+      "sampleTestCases": [
+        { "input": "3 3\n1 2 3\n4 5 6\n7 8 9", "expectedOutput": "1 2 3 6 9 8 7 4 5" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 4\n1 2 3 4", "expectedOutput": "1 2 3 4" },
+        { "input": "4 1\n1\n2\n3\n4", "expectedOutput": "1 2 3 4" },
+        { "input": "2 3\n1 2 3\n4 5 6", "expectedOutput": "1 2 3 6 5 4" }
+      ],
+      "starterCode": {
+        "javascript": "const fs=require('fs'); const L=fs.readFileSync(0,'utf-8').trim().split('\\n');\n",
+        "python": "import sys\nL=sys.stdin.read().splitlines()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Sort Array By Parity (Stable)",
+      "slug": "sort-array-parity-stable",
+      "description": "Reorder the array so that **all even integers come before all odd integers**. Within the even group and within the odd group, **preserve the original relative order** (stable partition).",
+      "difficulty": "easy",
+      "tags": ["Arrays", "Two Pointers"],
+      "inputFormat": "Line 1: `n`. Line 2: `n` integers.",
+      "outputFormat": "One line — reordered array, space-separated.",
+      "constraints": "1 ≤ n ≤ 10^5",
+      "hints": [
+        "Two output arrays (evens and odds) concatenated preserve stability.",
+        "In-place stable partition is harder; extra array is fine at this size.",
+        "Single pass: append to even or odd list by n%2."
+      ],
+      "sampleTestCases": [
+        { "input": "4\n3 1 2 4", "expectedOutput": "2 4 3 1" },
+        { "input": "5\n2 4 6 1 3", "expectedOutput": "2 4 6 1 3" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1\n7", "expectedOutput": "7" },
+        { "input": "2\n2 1", "expectedOutput": "2 1" },
+        { "input": "6\n1 3 2 4 5 6", "expectedOutput": "2 4 6 1 3 5" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number); const n=a[0], nums=a.slice(1,1+n);\n",
+        "python": "d=list(map(int,open(0).read().split())); n=d[0]; nums=d[1:1+n]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Find the Duplicate Number",
+      "slug": "find-duplicate-number-floyd",
+      "description": "An array of length `n+1` contains integers in `[1, n]` with **exactly one** value appearing twice (others once). Find the duplicate value.",
+      "difficulty": "medium",
+      "tags": ["Arrays", "Two Pointers", "Binary Search"],
+      "inputFormat": "Line 1: `n` (array has length `n+1`). Line 2: `n+1` integers.",
+      "outputFormat": "One integer — the duplicate.",
+      "constraints": "1 ≤ n ≤ 10^5",
+      "hints": [
+        "Treat indices as a linked list: i → nums[i]; cycle reveals duplicate.",
+        "Binary search on value range counting how many ≤ mid.",
+        "Pigeonhole guarantees collision."
+      ],
+      "sampleTestCases": [
+        { "input": "4\n1 3 4 2 2", "expectedOutput": "2" },
+        { "input": "2\n1 1 2", "expectedOutput": "1" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1\n1 1", "expectedOutput": "1" },
+        { "input": "5\n1 2 3 4 5 3", "expectedOutput": "3" },
+        { "input": "9\n1 2 3 4 5 6 7 8 9 9", "expectedOutput": "9" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "d=list(map(int,open(0).read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Container With Most Water",
+      "slug": "container-with-most-water-bars",
+      "description": "Given non-negative integers `height[i]` as vertical lines, pick two lines with the x-axis to form a container. Find the **maximum area** of water the container can hold.",
+      "difficulty": "medium",
+      "tags": ["Arrays", "Two Pointers", "Greedy"],
+      "inputFormat": "Line 1: `n`. Line 2: `n` non-negative integers — heights.",
+      "outputFormat": "One integer — maximum area.",
+      "constraints": "2 ≤ n ≤ 10^5, 0 ≤ height ≤ 10^4",
+      "hints": [
+        "Two pointers at both ends; always discard the shorter side.",
+        "Area = width × min(height[left], height[right]).",
+        "Greedy move is safe because keeping the short side cannot beat current best with this width."
+      ],
+      "sampleTestCases": [
+        { "input": "9\n1 8 6 2 5 4 8 3 7", "expectedOutput": "49" }
+      ],
+      "hiddenTestCases": [
+        { "input": "2\n1 1", "expectedOutput": "1" },
+        { "input": "3\n1 2 1", "expectedOutput": "2" },
+        { "input": "5\n4 3 2 1 4", "expectedOutput": "16" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number); const n=a[0], h=a.slice(1,1+n);\n",
+        "python": "d=list(map(int,open(0).read().split())); n=d[0]; h=d[1:1+n]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Next Permutation",
+      "slug": "next-permutation-lex-batch1",
+      "description": "Given a sequence of **distinct** integers, print the **next lexicographically greater** permutation on one line (space-separated). If the current order is already the largest, print the **smallest** permutation (sorted ascending).",
+      "difficulty": "medium",
+      "tags": ["Arrays", "Two Pointers"],
+      "inputFormat": "Line 1: `n`. Line 2: `n` distinct integers.",
+      "outputFormat": "One line — next permutation.",
+      "constraints": "1 ≤ n ≤ 100",
+      "hints": [
+        "From the right, find first i where nums[i] < nums[i+1].",
+        "Swap nums[i] with smallest larger element on the right, then reverse suffix.",
+        "If no such i, reverse whole array."
+      ],
+      "sampleTestCases": [
+        { "input": "3\n1 2 3", "expectedOutput": "1 3 2" },
+        { "input": "3\n3 2 1", "expectedOutput": "1 2 3" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1\n5", "expectedOutput": "5" },
+        { "input": "4\n1 3 2 4", "expectedOutput": "1 4 2 3" },
+        { "input": "2\n2 1", "expectedOutput": "1 2" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number); const n=a[0], nums=a.slice(1,1+n);\n",
+        "python": "d=list(map(int,open(0).read().split())); n=d[0]; nums=d[1:1+n]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Rotate Image 90 Degrees Clockwise",
+      "slug": "rotate-matrix-90-clockwise-batch1",
+      "description": "Given an `n×n` matrix, rotate it **90° clockwise**. Print `n` then `n` rows of the rotated matrix.",
+      "difficulty": "medium",
+      "tags": ["Arrays", "Matrix"],
+      "inputFormat": "Line 1: `n`. Next `n` lines: `n` integers each.",
+      "outputFormat": "Line 1: `n`. Then `n` lines of rotated matrix.",
+      "constraints": "1 ≤ n ≤ 50",
+      "hints": [
+        "Transpose then reverse each row equals 90° clockwise.",
+        "Or rotate four cells in place layer by layer.",
+        "New[i][j] = old[n-1-j][i]."
+      ],
+      "sampleTestCases": [
+        {
+          "input": "3\n1 2 3\n4 5 6\n7 8 9",
+          "expectedOutput": "3\n7 4 1\n8 5 2\n9 6 3"
+        }
+      ],
+      "hiddenTestCases": [
+        { "input": "1\n42", "expectedOutput": "1\n42" },
+        { "input": "2\n1 2\n3 4", "expectedOutput": "2\n3 1\n4 2" }
+      ],
+      "starterCode": {
+        "javascript": "const fs=require('fs'); const L=fs.readFileSync(0,'utf-8').trim().split('\\n');\n",
+        "python": "import sys\nL=sys.stdin.read().splitlines()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Longest Subarray of 1s After Flipping K Zeros",
+      "slug": "longest-subarray-ones-flip-k-zeros",
+      "description": "Binary array `nums` (only 0 and 1). You may flip at most `k` zeros to 1. What is the **maximum length** of a contiguous subarray that can contain only 1s after optimal flips?",
+      "difficulty": "medium",
+      "tags": ["Arrays", "Sliding Window", "Two Pointers"],
+      "inputFormat": "Line 1: `n` and `k`. Line 2: `n` integers 0 or 1.",
+      "outputFormat": "One integer — maximum length.",
+      "constraints": "1 ≤ n ≤ 10^5, 0 ≤ k ≤ n",
+      "hints": [
+        "Sliding window: expand while zeros in window ≤ k, shrink when > k.",
+        "Track count of zeros in current window.",
+        "Equivalent: longest subarray with at most k zeros."
+      ],
+      "sampleTestCases": [
+        { "input": "5 1\n1 1 0 1 1", "expectedOutput": "4" },
+        { "input": "4 2\n0 0 1 1", "expectedOutput": "4" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 0\n1", "expectedOutput": "1" },
+        { "input": "3 0\n1 1 1", "expectedOutput": "3" },
+        { "input": "6 2\n0 0 1 1 0 0", "expectedOutput": "4" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "d=list(map(int,open(0).read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Minimum Size Subarray Sum (Positive Array)",
+      "slug": "minimum-size-subarray-sum-positive",
+      "description": "Given an array of **positive** integers and a target `s`, find the **minimal length** of a contiguous subarray with sum **≥** `s`. If none exists, print `0`.",
+      "difficulty": "medium",
+      "tags": ["Arrays", "Sliding Window", "Binary Search"],
+      "inputFormat": "Line 1: `n` and `s`. Line 2: `n` positive integers.",
+      "outputFormat": "One integer — minimal length or 0.",
+      "constraints": "1 ≤ n ≤ 10^5, 1 ≤ nums[i] ≤ 10^4, 1 ≤ s ≤ 10^9",
+      "hints": [
+        "Expand right with running sum; shrink left while sum ≥ s to minimize length.",
+        "All positive → window sum is monotone when you move pointers.",
+        "Prefix sums + binary search also works."
+      ],
+      "sampleTestCases": [
+        { "input": "6 7\n2 3 1 2 4 3", "expectedOutput": "2" },
+        { "input": "3 100\n1 2 3", "expectedOutput": "0" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 5\n5", "expectedOutput": "1" },
+        { "input": "4 4\n1 4 4 1", "expectedOutput": "1" },
+        { "input": "5 11\n1 2 3 4 5", "expectedOutput": "3" }
+      ],
+      "starterCode": {
+        "javascript": "const a=require('fs').readFileSync(0,'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "d=list(map(int,open(0).read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Reverse Words in a String",
+      "slug": "reverse-words-in-string-batch1",
+      "description": "Given a string with words separated by spaces, return the words in **reverse order**, single space between words, **no** leading or trailing spaces. Words are non-empty sequences of visible ASCII (no inner spaces).",
+      "difficulty": "medium",
+      "tags": ["Strings", "Two Pointers"],
+      "inputFormat": "One line — the string (length ≤ 10^4).",
+      "outputFormat": "One line — reversed word order, trimmed.",
+      "constraints": "Input contains only letters, digits, and spaces; at least one word.",
+      "hints": [
+        "Trim, split on whitespace runs, reverse the list, join with single space.",
+        "In-place character reverse tricks exist but split is clearer.",
+        "Watch multiple consecutive spaces in input."
+      ],
+      "sampleTestCases": [
+        { "input": "the sky is blue", "expectedOutput": "blue is sky the" },
+        { "input": "  hello   world  ", "expectedOutput": "world hello" }
+      ],
+      "hiddenTestCases": [
+        { "input": "a", "expectedOutput": "a" },
+        { "input": "  one  ", "expectedOutput": "one" },
+        { "input": "Alice likes Bob", "expectedOutput": "Bob likes Alice" }
+      ],
+      "starterCode": {
+        "javascript": "const s=require('fs').readFileSync(0,'utf-8').replace(/\\n$/,'');\n",
+        "python": "s=input()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){string s; getline(cin,s); return 0;}\n"
+      }
+    },
+    {
+      "title": "Add Binary Strings",
+      "slug": "add-binary-strings-batch1",
+      "description": "Given two binary strings `a` and `b` (no leading zeros except the single character `\"0\"`), return their sum as a **binary string**.",
+      "difficulty": "easy",
+      "tags": ["Strings", "Math", "Bit Manipulation"],
+      "inputFormat": "Line 1: binary string `a`. Line 2: binary string `b`.",
+      "outputFormat": "One line — sum in binary.",
+      "constraints": "1 ≤ |a|,|b| ≤ 5000",
+      "hints": [
+        "Simulate elementary school addition from right with carry.",
+        "Pad the shorter string mentally with leading zeros.",
+        "Avoid converting full integers if language limits apply — digit DP style."
+      ],
+      "sampleTestCases": [
+        { "input": "11\n1", "expectedOutput": "100" },
+        { "input": "1010\n1011", "expectedOutput": "10101" }
+      ],
+      "hiddenTestCases": [
+        { "input": "0\n0", "expectedOutput": "0" },
+        { "input": "1\n1", "expectedOutput": "10" },
+        { "input": "1111\n1111", "expectedOutput": "11110" }
+      ],
+      "starterCode": {
+        "javascript": "const fs=require('fs'); const [a,b]=fs.readFileSync(0,'utf-8').trim().split('\\n');\n",
+        "python": "a=input().strip(); b=input().strip()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Multiply Two Numbers as Strings",
+      "slug": "multiply-numeric-strings-batch1",
+      "description": "Given two **non-negative** integers represented as decimal strings (no leading zeros except `\"0\"`), print their product as a string **without** leading zeros (unless the product is zero).",
+      "difficulty": "medium",
+      "tags": ["Strings", "Math"],
+      "inputFormat": "Line 1: string `num1`. Line 2: string `num2`.",
+      "outputFormat": "One line — product as decimal string.",
+      "constraints": "1 ≤ |num1|,|num2| ≤ 500, inputs represent values that fit in output length limits.",
+      "hints": [
+        "Grade-school multiply: each digit of one against all digits of the other.",
+        "Result length ≤ len1+len2; accumulate into an int array.",
+        "Karatsuba is overkill here."
+      ],
+      "sampleTestCases": [
+        { "input": "123\n456", "expectedOutput": "56088" },
+        { "input": "2\n3", "expectedOutput": "6" }
+      ],
+      "hiddenTestCases": [
+        { "input": "0\n9999", "expectedOutput": "0" },
+        { "input": "9\n9", "expectedOutput": "81" },
+        { "input": "12\n12", "expectedOutput": "144" }
+      ],
+      "starterCode": {
+        "javascript": "const fs=require('fs'); const [a,b]=fs.readFileSync(0,'utf-8').trim().split('\\n');\n",
+        "python": "a=input().strip(); b=input().strip()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Compare Version Numbers",
+      "slug": "compare-version-numbers-batch1",
+      "description": "Compare two version strings `v1` and `v2` consisting of non-negative numeric components separated by `.`. Compare numerically component-wise (ignore leading zeros in each component). Print `-1` if v1 < v2, `1` if v1 > v2, `0` if equal.",
+      "difficulty": "medium",
+      "tags": ["Strings", "Two Pointers"],
+      "inputFormat": "Line 1: version `v1`. Line 2: version `v2`.",
+      "outputFormat": "One of: -1, 0, 1",
+      "constraints": "1 ≤ |v1|,|v2| ≤ 500, each component fits in int",
+      "hints": [
+        "Split by '.', parse ints, pad with zeros to same length virtually.",
+        "Compare left to right until difference.",
+        "Trailing .0 components are zero."
+      ],
+      "sampleTestCases": [
+        { "input": "1.01\n1.001", "expectedOutput": "0" },
+        { "input": "1.0\n1.0.0", "expectedOutput": "0" }
+      ],
+      "hiddenTestCases": [
+        { "input": "0.1\n1.1", "expectedOutput": "-1" },
+        { "input": "1.2\n1.10", "expectedOutput": "0" },
+        { "input": "2.0\n1.9", "expectedOutput": "1" }
+      ],
+      "starterCode": {
+        "javascript": "const fs=require('fs'); const [v1,v2]=fs.readFileSync(0,'utf-8').trim().split('\\n');\n",
+        "python": "v1=input().strip(); v2=input().strip()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Longest Palindrome Length (Rearrange Letters)",
+      "slug": "longest-palindrome-length-from-chars",
+      "description": "Given a string of lowercase letters, you may **rearrange** characters freely. What is the **maximum length** of a palindrome you can build?",
+      "difficulty": "easy",
+      "tags": ["Strings", "Greedy", "Hash Table"],
+      "inputFormat": "One line — string `s` (|s| ≤ 2000, lowercase).",
+      "outputFormat": "One integer — maximum palindrome length.",
+      "constraints": "Only lowercase English letters.",
+      "hints": [
+        "Count letters; each pair contributes 2 to length.",
+        "At most one character with odd count can sit in the middle.",
+        "Sum floor(count/2)*2 plus one if any odd frequency."
+      ],
+      "sampleTestCases": [
+        { "input": "abccccdd", "expectedOutput": "7" },
+        { "input": "aa", "expectedOutput": "2" }
+      ],
+      "hiddenTestCases": [
+        { "input": "a", "expectedOutput": "1" },
+        { "input": "abc", "expectedOutput": "1" },
+        { "input": "aaaabbbb", "expectedOutput": "8" }
+      ],
+      "starterCode": {
+        "javascript": "const s=require('fs').readFileSync(0,'utf-8').trim();\n",
+        "python": "s=input().strip()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){string s; cin>>s; return 0;}\n"
+      }
+    },
+    {
+      "title": "Reorganize String (No Adjacent Equal)",
+      "slug": "reorganize-string-no-adjacent-equal",
+      "description": "Given lowercase string `s`, rearrange letters so that **no two adjacent** characters are equal. If multiple valid strings exist, print the **lexicographically smallest** one. If none exists, print exactly `IMPOSSIBLE`.",
+      "difficulty": "medium",
+      "tags": ["Strings", "Greedy", "Heap"],
+      "inputFormat": "One line — string `s` (|s| ≤ 500, lowercase).",
+      "outputFormat": "One line — valid rearrangement or `IMPOSSIBLE` (uppercase, exact).",
+      "constraints": "Only lowercase a–z.",
+      "hints": [
+        "If any character frequency > ⌈n/2⌉, impossible.",
+        "Greedy: place most frequent with spacing — max-heap by count.",
+        "Alternate placing the two highest remaining counts."
+      ],
+      "sampleTestCases": [
+        { "input": "aab", "expectedOutput": "aba" },
+        { "input": "aaab", "expectedOutput": "IMPOSSIBLE" }
+      ],
+      "hiddenTestCases": [
+        { "input": "a", "expectedOutput": "a" },
+        { "input": "aaabbb", "expectedOutput": "ababab" },
+        { "input": "aaaaabbb", "expectedOutput": "IMPOSSIBLE" }
+      ],
+      "starterCode": {
+        "javascript": "const s=require('fs').readFileSync(0,'utf-8').trim();\n",
+        "python": "s=input().strip()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){string s; cin>>s; return 0;}\n"
+      }
+    },
+    {
+      "title": "Remove All Adjacent Duplicates In String",
+      "slug": "remove-adjacent-duplicates-ii-batch1",
+      "description": "Repeatedly remove **adjacent** equal letter pairs until no more can be removed (stack reduction). Print the final string. Only lowercase letters.",
+      "difficulty": "easy",
+      "tags": ["Strings", "Stack & Queue"],
+      "inputFormat": "One line — string `s` (|s| ≤ 10^4, lowercase).",
+      "outputFormat": "One line — reduced string (may be empty).",
+      "constraints": "Only lowercase a–z.",
+      "hints": [
+        "Use a stack: push if different from top, else pop.",
+        "One linear pass can simulate all rounds.",
+        "Think of it as cancelling matching neighbors repeatedly."
+      ],
+      "sampleTestCases": [
+        { "input": "abbaca", "expectedOutput": "ca" },
+        { "input": "azxxzy", "expectedOutput": "ay" }
+      ],
+      "hiddenTestCases": [
+        { "input": "a", "expectedOutput": "a" },
+        { "input": "aaaaaaaa", "expectedOutput": "" },
+        { "input": "abcde", "expectedOutput": "abcde" }
+      ],
+      "starterCode": {
+        "javascript": "const s=require('fs').readFileSync(0,'utf-8').trim();\n",
+        "python": "s=input().strip()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){string s; cin>>s; return 0;}\n"
+      }
+    },
+    {
+      "title": "Count Binary Substrings (Equal Blocks)",
+      "slug": "count-binary-substrings-equal-blocks",
+      "description": "Given binary string `s`, count how many **non-empty** substrings have **equal** numbers of consecutive `0`s grouped on the left and consecutive `1`s grouped on the right (or the mirrored pattern) — i.e. substrings of the form `0...01...1` or `1...10...0` with both runs positive and same length. (Classic LeetCode 696 style count.)",
+      "difficulty": "easy",
+      "tags": ["Strings", "Two Pointers"],
+      "inputFormat": "One line — binary string `s` (|s| ≤ 5·10^4).",
+      "outputFormat": "One integer — count.",
+      "constraints": "Characters are only `0` and `1`.",
+      "hints": [
+        "Run-length encode: track lengths of alternating blocks.",
+        "Each adjacent pair of blocks contributes min(len0,len1) substrings.",
+        "O(n) single pass."
+      ],
+      "sampleTestCases": [
+        { "input": "00110011", "expectedOutput": "6" },
+        { "input": "10101", "expectedOutput": "4" }
+      ],
+      "hiddenTestCases": [
+        { "input": "0", "expectedOutput": "0" },
+        { "input": "000111", "expectedOutput": "3" },
+        { "input": "11001", "expectedOutput": "3" }
+      ],
+      "starterCode": {
+        "javascript": "const s=require('fs').readFileSync(0,'utf-8').trim();\n",
+        "python": "s=input().strip()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){string s; cin>>s; return 0;}\n"
+      }
+    }
+  ]
+}

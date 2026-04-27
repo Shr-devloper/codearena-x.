@@ -1,0 +1,452 @@
+{
+  "version": 1,
+  "problems": [
+    {
+      "title": "Two Sum",
+      "slug": "two-sum",
+      "description": "Given an array of integers `nums` and an integer `target`, return the **0-based** indices of the two distinct elements whose values sum to `target`. You may assume exactly one valid answer exists, and you cannot use the same element twice.\n\nThis is a classic hash-map / two-pointer building block seen in most interview loops.",
+      "difficulty": "easy",
+      "tags": ["Arrays", "Hash Table"],
+      "inputFormat": "Line 1: integer `n` — length of the array.  \nLine 2: `n` space-separated integers.  \nLine 3: integer `target`.",
+      "outputFormat": "Two space-separated integers `i j` — the indices, where `i < j`.",
+      "constraints": "2 ≤ n ≤ 10^4, |nums[i]|, |target| ≤ 10^9",
+      "hints": [
+        "A brute O(n^2) pair scan is enough for the smallest n, but a hash map of value → index gives O(n).",
+        "When scanning left to right, for each `x` check if `target - x` was seen before.",
+        "Careful: return indices, not values; the pair must be distinct indices even if values repeat."
+      ],
+      "sampleTestCases": [
+        { "input": "4\n2 7 11 15\n9", "expectedOutput": "0 1" },
+        { "input": "3\n3 2 4\n6", "expectedOutput": "1 2" }
+      ],
+      "hiddenTestCases": [
+        { "input": "2\n3 3\n6", "expectedOutput": "0 1" },
+        { "input": "3\n1 1 1\n2", "expectedOutput": "0 1" },
+        { "input": "5\n-1 0 1 2 -1\n0", "expectedOutput": "0 3" }
+      ],
+      "starterCode": {
+        "javascript": "const input = require('fs').readFileSync(0, 'utf-8').trim().split(/\\s+/).map(Number);\nlet k = 0;\nconst n = input[k++];\nconst nums = input.slice(k, k + n); k += n;\nconst target = input[k++];\n// print two indices (space separated)\n",
+        "python": "import sys\ndata = list(map(int, sys.stdin.read().split()))\nn = data[0]\nnums = data[1:1 + n]\ntarget = data[1 + n]\n# print two indices (space separated)\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nint main() {\n  ios::sync_with_stdio(false);\n  cin.tie(nullptr);\n  int n;\n  if (!(cin >> n)) return 0;\n  vector<long long> a(n);\n  for (int i = 0; i < n; i++) cin >> a[i];\n  long long t;\n  cin >> t;\n  // print two indices (space separated)\n  return 0;\n}\n"
+      }
+    },
+    {
+      "title": "Maximum Subarray (Kadane)",
+      "slug": "maximum-subarray",
+      "description": "Given an integer array `nums`, return the **maximum possible sum** of a contiguous subarray. The subarray can be a single element. An empty subarray is **not** allowed (the array is non-empty in all tests).",
+      "difficulty": "easy",
+      "tags": ["Arrays", "Dynamic Programming", "Greedy"],
+      "inputFormat": "Line 1: `n` — number of elements.  \nLine 2: `n` space-separated integers.",
+      "outputFormat": "A single integer — the maximum subarray sum.",
+      "constraints": "1 ≤ n ≤ 10^5, |nums[i]| ≤ 10^4",
+      "hints": [
+        "Let `dp[i]` = best sum ending at i; or keep running `cur` and `ans`.",
+        "Reset a negative running sum to zero is wrong — at least one element: compare `cur + x` vs `x`.",
+        "Kadane: `ans = max(ans, cur)` each step where `cur = max(x, cur + x)`."
+      ],
+      "sampleTestCases": [
+        { "input": "9\n-2 1 -3 4 -1 2 1 -5 4", "expectedOutput": "6" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1\n-1", "expectedOutput": "-1" },
+        { "input": "1\n1", "expectedOutput": "1" },
+        { "input": "5\n5 4 -1 7 8", "expectedOutput": "23" }
+      ],
+      "starterCode": {
+        "javascript": "const a = require('fs').readFileSync(0, 'utf-8').trim().split(/\\s+/).map(Number);\nconst n = a[0];\nconst nums = a.slice(1, 1 + n);\n",
+        "python": "import sys\nd = list(map(int, sys.stdin.read().split()))\nn, nums = d[0], d[1:1 + d[0]]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nint main() {\n  ios::sync_with_stdio(false);\n  int n; cin >> n; vector<long long> a(n);\n  for (int &x: a) cin >> x;\n  return 0;\n}\n"
+      }
+    },
+    {
+      "title": "Merge Intervals",
+      "slug": "merge-intervals",
+      "description": "You are given `n` closed intervals `[start, end]`. **Merge** all overlapping intervals and print the result in **sorted order** by start. Two intervals `a` and `b` overlap if they share at least one point (touching at an endpoint counts as overlap, e.g. [1,4] and [4,5] merge to [1,5]).",
+      "difficulty": "medium",
+      "tags": ["Arrays", "Sorting", "Greedy"],
+      "inputFormat": "Line 1: `n` — number of intervals.  \nNext `n` lines: two integers `start end` per line.",
+      "outputFormat": "Line 1: `m` — number of merged intervals.  \nNext `m` lines: `start end` for each merged interval, sorted by `start`.",
+      "constraints": "1 ≤ n ≤ 10^4, 0 ≤ start ≤ end ≤ 10^9",
+      "hints": [
+        "Sort intervals by `start` (and `end` for ties).",
+        "Sweep: extend current or push new merged interval when `next.start > current.end`.",
+        "If `next.start <= current.end`, merge: `end = max(current.end, next.end)`."
+      ],
+      "sampleTestCases": [
+        { "input": "3\n1 3\n2 4\n5 7", "expectedOutput": "2\n1 4\n5 7" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1\n1 1", "expectedOutput": "1\n1 1" },
+        { "input": "2\n1 4\n0 0", "expectedOutput": "2\n0 0\n1 4" },
+        { "input": "2\n1 4\n2 3", "expectedOutput": "1\n1 4" }
+      ],
+      "starterCode": {
+        "javascript": "const fs = require('fs'); const q = fs.readFileSync(0, 'utf-8').trim().split(/\\n/); const n = +q[0];\n",
+        "python": "import sys\nlines = [ln.strip() for ln in sys.stdin if ln.strip()]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\nint main(){ios::sync_with_stdio(false);int n;cin>>n;return 0;}\n"
+      }
+    },
+    {
+      "title": "Rotate Array to the Right",
+      "slug": "rotate-array",
+      "description": "Given an integer array and a non-negative integer `k`, **rotate** the array to the right by `k` steps. The last element wraps to the front. `k` may be larger than the array length — `k` is effectively `k % n` when `n > 0`.",
+      "difficulty": "easy",
+      "tags": ["Arrays", "Two Pointers"],
+      "inputFormat": "Line 1: `n` and `k` — array length and rotation steps.  \nLine 2: `n` space-separated integers.",
+      "outputFormat": "One line: the rotated array, space-separated.",
+      "constraints": "1 ≤ n ≤ 10^5, 0 ≤ k ≤ 10^9, |nums[i]| ≤ 10^9",
+      "hints": [
+        "Reversing three segments can rotate in O(n) time and O(1) extra space.",
+        "For `k` steps right: reverse all, then reverse first `k`, then the rest (after `k = k % n`).",
+        "A copy array `out[(i + k) % n] = nums[i]` is the simplest to code."
+      ],
+      "sampleTestCases": [
+        { "input": "7 3\n1 2 3 4 5 6 7", "expectedOutput": "5 6 7 1 2 3 4" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 0\n5", "expectedOutput": "5" },
+        { "input": "3 3\n1 2 3", "expectedOutput": "1 2 3" },
+        { "input": "4 2\n-1 -100 0 2", "expectedOutput": "0 2 -1 -100" }
+      ],
+      "starterCode": {
+        "javascript": "const a = require('fs').readFileSync(0, 'utf-8').trim().split(/\\s+/).map(Number);\nconst n = a[0], k = a[1], nums = a.slice(2, 2 + n);\n",
+        "python": "import sys\nd = list(map(int, sys.stdin.read().split()))\nn, k = d[0], d[1]\nnums = d[2:2 + n]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){int n,k; cin>>n>>k; return 0;}\n"
+      }
+    },
+    {
+      "title": "Valid Anagram",
+      "slug": "valid-anagram",
+      "description": "Given two strings `s` and `t`, print `true` if `t` is an anagram of `s` (same multiset of characters, same length), and `false` otherwise. Anagrams ignore order; only character counts must match. Strings contain only **lowercase English letters** in all tests.",
+      "difficulty": "easy",
+      "tags": ["Strings", "Sorting", "Hash Table"],
+      "inputFormat": "Line 1: string `s`.  \nLine 2: string `t`.",
+      "outputFormat": "The literal text `true` or `false` (lowercase).",
+      "constraints": "1 ≤ |s| = |t| ≤ 5 × 10^4",
+      "hints": [
+        "If lengths differ, return false immediately.",
+        "Sort both strings and compare, or use a 26-counter array.",
+        "Unicode is out of scope — lowercase a–z only."
+      ],
+      "sampleTestCases": [
+        { "input": "anagram\nnagaram", "expectedOutput": "true" },
+        { "input": "rat\ncar", "expectedOutput": "false" }
+      ],
+      "hiddenTestCases": [
+        { "input": "a\na", "expectedOutput": "true" },
+        { "input": "ab\nba", "expectedOutput": "true" },
+        { "input": "aa\na", "expectedOutput": "false" }
+      ],
+      "starterCode": {
+        "javascript": "const lines = require('fs').readFileSync(0, 'utf-8').trim().split('\\n');\nconst s = lines[0], t = lines[1];\n",
+        "python": "import sys\ns, t = sys.stdin.read().splitlines()[:2]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){string s,t; cin>>s>>t; return 0;}\n"
+      }
+    },
+    {
+      "title": "Longest Common Prefix",
+      "slug": "longest-common-prefix",
+      "description": "Given `n` strings, return the **longest common prefix** shared by all of them. If the empty string is the only common prefix, print a blank line, or a single line with an empty result — use an **empty line** (zero characters) for no common prefix. For this judge, the output is **one line** with the prefix, which may be empty.",
+      "difficulty": "easy",
+      "tags": ["Strings"],
+      "inputFormat": "Line 1: `n` — number of strings.  \nNext `n` lines: each a non-empty string of lowercase letters.",
+      "outputFormat": "One line: the longest common prefix (may be empty).",
+      "constraints": "1 ≤ n ≤ 200, 1 ≤ each length ≤ 200",
+      "hints": [
+        "Use the first string as candidate, shrink while others mismatch.",
+        "Or sort lexicographically and compare first and last — only works for \"prefix of all\" if you also verify; sorting trick: LCP of min and max string in sorted order is a valid approach for *common* prefix? For all strings, compare min to max is insufficient alone — for **all** you still need the scan.",
+        "Simplest: horizontal scan char by char on first string and stop on any mismatch in any other string."
+      ],
+      "sampleTestCases": [
+        { "input": "3\nflower\nflow\nflight", "expectedOutput": "fl" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1\nsolo", "expectedOutput": "solo" },
+        { "input": "2\ndog\ncat", "expectedOutput": "" },
+        { "input": "2\nc\ncb", "expectedOutput": "c" }
+      ],
+      "starterCode": {
+        "javascript": "const a = require('fs').readFileSync(0, 'utf-8').trim().split('\\n');\nconst n = +a[0]; const strs = a.slice(1, 1 + n);\n",
+        "python": "import sys\nraw = [ln.rstrip('\\n') for ln in sys.stdin.read().splitlines()]\nn = int(raw[0].strip())\nstrs = [raw[1 + i] for i in range(n)]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){int n; cin>>n; return 0;}\n"
+      }
+    },
+    {
+      "title": "Is Palindrome (Recursive check)",
+      "slug": "is-palindrome-string",
+      "description": "Given a lowercase string `s`, print `true` if it reads the same forward and backward, else `false`. In your solution, you **must** use **recursion** to decide: implement a helper `isPal(l, r)` (or language equivalent) and base cases when `l >= r` or `s[l] != s[r]`. (The grader only checks I/O, but the statement matches interview expectations.)",
+      "difficulty": "easy",
+      "tags": ["Strings", "Recursion", "Two Pointers"],
+      "inputFormat": "A single line with string `s` (lowercase a–z).",
+      "outputFormat": "`true` or `false` (lowercase).",
+      "constraints": "1 ≤ |s| ≤ 1000",
+      "hints": [
+        "Recursion: compare s[l] and s[r], recurse on (l+1, r-1) until l >= r.",
+        "Length 0 or 1 is palindrome: true if l >= r after checks.",
+        "Iterative two-pointer also works in practice; follow spec for course/interview use."
+      ],
+      "sampleTestCases": [
+        { "input": "racecar", "expectedOutput": "true" },
+        { "input": "hello", "expectedOutput": "false" }
+      ],
+      "hiddenTestCases": [
+        { "input": "a", "expectedOutput": "true" },
+        { "input": "ab", "expectedOutput": "false" }
+      ],
+      "starterCode": {
+        "javascript": "const s = require('fs').readFileSync(0, 'utf-8').trim();\n",
+        "python": "s = input().strip()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){string s; cin>>s; return 0;}\n"
+      }
+    },
+    {
+      "title": "Climbing Stairs",
+      "slug": "climbing-stairs",
+      "description": "You can climb 1 or 2 steps at a time. Count how many distinct ways to reach the top of a staircase of `n` steps (order matters). `n` is a positive integer. Answer fits in 64-bit signed integer for all tests (n ≤ 45 in constraints).",
+      "difficulty": "easy",
+      "tags": ["Dynamic Programming", "Recursion"],
+      "inputFormat": "A single line with integer `n`.",
+      "outputFormat": "One integer — number of ways.",
+      "constraints": "1 ≤ n ≤ 45",
+      "hints": [
+        "Ways(n) = Ways(n-1) + Ways(n-2) with base cases 1 and 2 steps.",
+        "Fibonacci shift: f(1)=1, f(2)=2, or f(0)=1,f(1)=1 depending on indexing.",
+        "Use DP array or two variables rolling."
+      ],
+      "sampleTestCases": [
+        { "input": "3", "expectedOutput": "3" },
+        { "input": "5", "expectedOutput": "8" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1", "expectedOutput": "1" },
+        { "input": "2", "expectedOutput": "2" }
+      ],
+      "starterCode": {
+        "javascript": "const n = +require('fs').readFileSync(0, 'utf-8').trim();\n",
+        "python": "n = int(input())\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){long long n; cin>>n; return 0;}\n"
+      }
+    },
+    {
+      "title": "House Robber",
+      "slug": "house-robber",
+      "description": "You are a robber in a line of `n` houses. Each house has a non-negative amount of money. You cannot rob two **adjacent** houses. Return the **maximum** money you can rob.",
+      "difficulty": "medium",
+      "tags": ["Dynamic Programming", "Arrays"],
+      "inputFormat": "Line 1: `n` — number of houses.  \nLine 2: `n` non-negative integers — money in each house.",
+      "outputFormat": "A single integer — maximum money.",
+      "constraints": "1 ≤ n ≤ 10^4, 0 ≤ money ≤ 10^4",
+      "hints": [
+        "At house i, either skip it (take best up to i-1) or rob it (add money[i] to best up to i-2).",
+        "dp[i] = max(dp[i-1], money[i] + dp[i-2]).",
+        "Constant memory: (prev, cur) two variables."
+      ],
+      "sampleTestCases": [
+        { "input": "3\n1 2 3", "expectedOutput": "4" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1\n0", "expectedOutput": "0" },
+        { "input": "2\n1 2", "expectedOutput": "2" },
+        { "input": "4\n2 1 1 2", "expectedOutput": "4" }
+      ],
+      "starterCode": {
+        "javascript": "const a = require('fs').readFileSync(0, 'utf-8').trim().split(/\\s+/).map(Number); const n=a[0], nums=a.slice(1);\n",
+        "python": "d=list(map(int, open(0).read().split()))\nn, nums = d[0], d[1:1+d[0]]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){int n; cin>>n; return 0;}\n"
+      }
+    },
+    {
+      "title": "Unique Paths in a Grid",
+      "slug": "unique-paths",
+      "description": "A robot starts at the top-left cell of an `m × n` grid and may only move **right** or **down** to the bottom-right cell. Return the number of distinct paths. Use modular arithmetic: answer fits in 64-bit integer for m,n ≤ 20.",
+      "difficulty": "medium",
+      "tags": ["Dynamic Programming", "Combinatorics"],
+      "inputFormat": "A single line with two integers `m` and `n`.",
+      "outputFormat": "One integer — number of paths.",
+      "constraints": "1 ≤ m, n ≤ 20",
+      "hints": [
+        "dp[i][j] = paths to (i,j) = dp[i-1][j] + dp[i][j-1] with first row/column 1s.",
+        "Combinatorics: C(m+n-2, m-1) for unobstructed full grid (same for all cells open).",
+        "Base: 1x1 grid has 1 path."
+      ],
+      "sampleTestCases": [
+        { "input": "3 2", "expectedOutput": "3" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 1", "expectedOutput": "1" },
+        { "input": "3 7", "expectedOutput": "28" }
+      ],
+      "starterCode": {
+        "javascript": "const [m,n] = require('fs').readFileSync(0, 'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "m, n = map(int, input().split())\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){int m,n; cin>>m>>n; return 0;}\n"
+      }
+    },
+    {
+      "title": "Longest Increasing Subsequence Length",
+      "slug": "lis-length",
+      "description": "Given an array of `n` integers, return the **length** of a longest **strictly** increasing subsequence (not necessarily contiguous).",
+      "difficulty": "medium",
+      "tags": ["Dynamic Programming", "Binary Search", "Arrays"],
+      "inputFormat": "Line 1: `n`.  \nLine 2: `n` space-separated integers.",
+      "outputFormat": "One integer — LIS length.",
+      "constraints": "1 ≤ n ≤ 2000, |nums[i]| ≤ 10^5",
+      "hints": [
+        "Classic O(n^2): dp[i] = 1 + max(dp[j] for j < i with nums[j] < nums[i]).",
+        "O(n log n): keep smallest tail for each length in a list.",
+        "Strictly > means no duplicates in one increasing chain."
+      ],
+      "sampleTestCases": [
+        { "input": "8\n10 9 2 5 3 7 101 18", "expectedOutput": "4" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1\n0", "expectedOutput": "1" },
+        { "input": "5\n1 2 2 2 2", "expectedOutput": "1" }
+      ],
+      "starterCode": {
+        "javascript": "const a = require('fs').readFileSync(0, 'utf-8').trim().split(/\\s+/).map(Number); const n=a[0], nums=a.slice(1);\n",
+        "python": "a=list(map(int,open(0).read().split()));n=a[0];nums=a[1:1+a[0]]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){int n; cin>>n; return 0;}\n"
+      }
+    },
+    {
+      "title": "Number of Islands",
+      "slug": "number-of-islands",
+      "description": "A binary matrix represents water `0` and land `1`. An **island** is 4-directionally connected land. Count the number of islands. The grid is rectangular — all rows have the same length.",
+      "difficulty": "medium",
+      "tags": ["Graphs", "Matrix", "DFS", "BFS"],
+      "inputFormat": "Line 1: `r` and `c` — rows and columns.  \nNext `r` lines: each has `c` characters `0` or `1` with **no** spaces (e.g. `1100`).",
+      "outputFormat": "One integer — island count.",
+      "constraints": "1 ≤ r, c ≤ 30",
+      "hints": [
+        "Flood fill from each unvisited 1, mark 0s as visited (or a visited set).",
+        "DFS stack or BFS queue for connected components in implicit graph.",
+        "8-direction is **not** used — only up/down/left/right."
+      ],
+      "sampleTestCases": [
+        {
+          "input": "4 5\n11000\n11000\n00100\n00011",
+          "expectedOutput": "3"
+        }
+      ],
+      "hiddenTestCases": [
+        { "input": "1 1\n0", "expectedOutput": "0" },
+        { "input": "1 1\n1", "expectedOutput": "1" }
+      ],
+      "starterCode": {
+        "javascript": "const q = require('fs').readFileSync(0, 'utf-8').trim().split('\\n');\n",
+        "python": "lines = [x.strip() for x in __import__('sys').stdin if True]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Course Schedule (Possible)",
+      "slug": "course-schedule",
+      "description": "There are `numCourses` labeled `0 .. numCourses-1`. A prerequisite pair `[a, b]` means: **to take course `a`, you must first complete course `b`**. Determine if you can finish all courses (no cycle in the prerequisite graph with edges `b → a`). Print `true` or `false`.",
+      "difficulty": "medium",
+      "tags": ["Graphs", "Topological Sort", "BFS", "DFS"],
+      "inputFormat": "Line 1: `numCourses` and `m` — number of courses and prerequisite rules.  \nNext `m` lines: `a b` (take `a` after `b`, i.e. edge from `b` to `a`).",
+      "outputFormat": "`true` or `false` (lowercase).",
+      "constraints": "1 ≤ numCourses ≤ 100, 0 ≤ m ≤ 2000, 0 ≤ a,b < numCourses",
+      "hints": [
+        "Build adjacency: b → a. In-degrees count prerequisites for each course.",
+        "Kahn: repeatedly remove zero in-degree; if you process all courses, true.",
+        "Cycle exists iff not all nodes are processed."
+      ],
+      "sampleTestCases": [
+        { "input": "2 1\n0 1", "expectedOutput": "true" }
+      ],
+      "hiddenTestCases": [
+        { "input": "2 2\n0 1\n1 0", "expectedOutput": "false" },
+        { "input": "1 0", "expectedOutput": "true" }
+      ],
+      "starterCode": {
+        "javascript": "const f = require('fs').readFileSync(0, 'utf-8').trim().split(/\\s+/).map(Number);\n",
+        "python": "import sys; d = list(map(int, sys.stdin.read().split()))\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){int n,m; return 0;}\n"
+      }
+    },
+    {
+      "title": "Binary Tree Maximum Depth (Level-order)",
+      "slug": "binary-tree-max-depth",
+      "description": "The input is a **level-order** serialization of a binary tree: a single line of tokens separated by spaces. A node value is a signed integer, or the token `null` (lowercase) for a missing child. The tree is built in the usual array representation (e.g. LeetCode style). **Maximum depth** is the number of nodes along the longest path from the root to a **leaf** (a node with no children). A single-node tree has depth 1.",
+      "difficulty": "easy",
+      "tags": ["Trees", "BFS"],
+      "inputFormat": "Line 1: level-order list, space-separated, using `null` for missing nodes. Example: `1 2 2 3 3` describes a small tree; build with a queue. Root is the first token; `null` consumes a slot but has no value.",
+      "outputFormat": "One integer — maximum depth.",
+      "constraints": "Number of values (including `null` tokens) between 1 and 100, not all `null`",
+      "hints": [
+        "Simulate the serial array to build nodes with a queue, or use parent pointers.",
+        "Depth = max of left depth and right depth plus 1, defined recursively; leaf depth 1 in this problem (single node tree depth 1).",
+        "BFS: track level count, increment when finishing a BFS level."
+      ],
+      "sampleTestCases": [
+        { "input": "3 9 20 null null 15 7", "expectedOutput": "3" }
+      ],
+      "hiddenTestCases": [
+        { "input": "0", "expectedOutput": "1" },
+        { "input": "1 null 2", "expectedOutput": "2" },
+        { "input": "1", "expectedOutput": "1" }
+      ],
+      "starterCode": {
+        "javascript": "const line = require('fs').readFileSync(0, 'utf-8').trim();\n",
+        "python": "line = input().strip()\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){return 0;}\n"
+      }
+    },
+    {
+      "title": "Fibonacci Number",
+      "slug": "fibonacci-n",
+      "description": "Compute `F(n)` the **n-th Fibonacci number** with: `F(0) = 0`, `F(1) = 1`, and `F(n) = F(n-1) + F(n-2)` for `n ≥ 2`.",
+      "difficulty": "easy",
+      "tags": ["Recursion", "Dynamic Programming", "Math"],
+      "inputFormat": "A single line with integer `n` where 0 ≤ n ≤ 40.",
+      "outputFormat": "A single integer — `F(n)`.",
+      "constraints": "0 ≤ n ≤ 40, result fits 32-bit signed (actually up to 40 fits).",
+      "hints": [
+        "Iterative: a,b = 0,1 and loop n times for shift.",
+        "Recursion is exponential — prefer memo or loop.",
+        "F(0) and F(1) are base."
+      ],
+      "sampleTestCases": [
+        { "input": "4", "expectedOutput": "3" }
+      ],
+      "hiddenTestCases": [
+        { "input": "0", "expectedOutput": "0" },
+        { "input": "7", "expectedOutput": "13" }
+      ],
+      "starterCode": {
+        "javascript": "const n = +require('fs').readFileSync(0, 'utf-8').trim();\n",
+        "python": "n = int(input())\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){int n; cin>>n; return 0;}\n"
+      }
+    },
+    {
+      "title": "Search in Rotated Sorted Array",
+      "slug": "search-rotated-array",
+      "description": "An array is sorted in ascending order, then **rotated** at an unknown pivot. All elements are **distinct** integers. Given `n`, the `n` elements in order, and a `target`, return the **0-based index** of `target`, or **-1** if not present. You should aim for O(log n) in interviews; any correct method is accepted here.",
+      "difficulty": "medium",
+      "tags": ["Arrays", "Binary Search", "Sorting"],
+      "inputFormat": "Line 1: `n` — size.  \nLine 2: `n` distinct integers, rotated sorted order.  \nLine 3: `target`.",
+      "outputFormat": "A single integer — index of `target`, or -1.",
+      "constraints": "1 ≤ n ≤ 5000, |values| and |target| ≤ 10^9, all distinct in the array",
+      "hints": [
+        "One half of any range is always normally sorted; compare with endpoints to know which side to binary search.",
+        "Check mid against target, then decide left or right half.",
+        "Edge: single element array — compare to target."
+      ],
+      "sampleTestCases": [
+        { "input": "5\n4 5 6 7 0\n0", "expectedOutput": "4" }
+      ],
+      "hiddenTestCases": [
+        { "input": "1\n5\n5", "expectedOutput": "0" },
+        { "input": "1\n0\n1", "expectedOutput": "-1" }
+      ],
+      "starterCode": {
+        "javascript": "const a = require('fs').readFileSync(0, 'utf-8').trim().split(/\\s+/).map(Number); const n=a[0], nums=a.slice(1,1+n), t=a[1+n];\n",
+        "python": "d=list(map(int,open(0).read().split()));n=d[0];nums=d[1:1+n];t=d[1+n]\n",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std; int main(){int n; cin>>n; return 0;}\n"
+      }
+    }
+  ]
+}

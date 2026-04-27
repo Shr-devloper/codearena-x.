@@ -1,0 +1,118 @@
+/**
+ * Canonical chamber domains — problems include matching `tags` entries.
+ * `id` is URL-safe; `tag` must match problem.tags exactly for membership.
+ */
+export const CHAMBERS = [
+  {
+    id: "arrays",
+    tag: "Arrays",
+    title: "Arrays Chamber",
+    blurb: "Contiguous memory, prefixes, windows, and two-pointer structure.",
+    accent: "from-rose-500/90 to-orange-400/80",
+    border: "border-rose-500/35",
+    glow: "shadow-[0_0_40px_-8px_rgba(244,63,94,0.45)]",
+  },
+  {
+    id: "strings",
+    tag: "Strings",
+    title: "Strings Chamber",
+    blurb: "Parsing, frequency, substrings, and character-level reasoning.",
+    accent: "from-emerald-500/90 to-teal-400/80",
+    border: "border-emerald-500/35",
+    glow: "shadow-[0_0_40px_-8px_rgba(16,185,129,0.4)]",
+  },
+  {
+    id: "recursion",
+    tag: "Recursion",
+    title: "Recursion Chamber",
+    blurb: "Base cases, call structure, and reducing problems to smaller selves.",
+    accent: "from-violet-500/90 to-indigo-400/80",
+    border: "border-violet-500/35",
+    glow: "shadow-[0_0_40px_-8px_rgba(139,92,246,0.45)]",
+  },
+  {
+    id: "dynamic-programming",
+    tag: "Dynamic Programming",
+    title: "Dynamic Programming Chamber",
+    blurb: "Optimal substructure, overlapping subproblems, tables, and order of evaluation.",
+    accent: "from-cyan-500/90 to-sky-400/80",
+    border: "border-cyan-500/35",
+    glow: "shadow-[0_0_40px_-8px_rgba(6,182,212,0.4)]",
+  },
+  {
+    id: "graphs",
+    tag: "Graphs",
+    title: "Graphs Chamber",
+    blurb: "Adjacency, traversals, connectivity, and layered propagation.",
+    accent: "from-fuchsia-500/90 to-pink-400/80",
+    border: "border-fuchsia-500/35",
+    glow: "shadow-[0_0_40px_-8px_rgba(217,70,239,0.4)]",
+  },
+  {
+    id: "trees",
+    tag: "Trees",
+    title: "Trees Chamber",
+    blurb: "Hierarchical data, depth, symmetry, and paths from root to leaf.",
+    accent: "from-amber-500/90 to-yellow-400/80",
+    border: "border-amber-500/35",
+    glow: "shadow-[0_0_40px_-8px_rgba(245,158,11,0.4)]",
+  },
+  {
+    id: "sorting",
+    tag: "Sorting",
+    title: "Sorting Chamber",
+    blurb: "Ordering keys, invariants, and merge patterns on sorted halves.",
+    accent: "from-blue-500/90 to-cyan-400/80",
+    border: "border-blue-500/35",
+    glow: "shadow-[0_0_40px_-8px_rgba(59,130,246,0.4)]",
+  },
+  {
+    id: "stack-queue",
+    tag: "Stack & Queue",
+    title: "Stack & Queue Chamber",
+    blurb: "LIFO/FIFO discipline, monotonic stacks, and scheduling layers.",
+    accent: "from-lime-500/90 to-green-400/80",
+    border: "border-lime-500/35",
+    glow: "shadow-[0_0_40px_-8px_rgba(132,204,22,0.35)]",
+  },
+  {
+    id: "greedy",
+    tag: "Greedy",
+    title: "Greedy Chamber",
+    blurb: "Local choices with global consequences — exchange arguments and intervals.",
+    accent: "from-red-500/90 to-rose-400/80",
+    border: "border-red-500/35",
+    glow: "shadow-[0_0_40px_-8px_rgba(239,68,68,0.4)]",
+  },
+  {
+    id: "recursion-backtracking",
+    tag: "Recursion & Backtracking",
+    title: "Recursion & Backtracking Chamber",
+    blurb: "Choices, undo, and exhaustive search with pruning — N-Queens to subsets.",
+    accent: "from-purple-500/90 to-pink-400/80",
+    border: "border-purple-500/35",
+    glow: "shadow-[0_0_40px_-8px_rgba(168,85,247,0.4)]",
+  },
+  {
+    id: "sorting-searching",
+    tag: "Sorting & Searching",
+    title: "Sorting & Searching Chamber",
+    blurb: "Order statistics, binary answers on sorted space, and coordinate compression.",
+    accent: "from-sky-500/90 to-blue-400/80",
+    border: "border-sky-500/35",
+    glow: "shadow-[0_0_40px_-8px_rgba(14,165,233,0.4)]",
+  },
+  {
+    id: "mixed-advanced",
+    tag: "Mixed / Advanced",
+    title: "Mixed / Advanced Chamber",
+    blurb: "Cross-domain patterns — segment trees, sweeps, and interview capstones.",
+    accent: "from-stone-400/90 to-slate-500/80",
+    border: "border-slate-500/35",
+    glow: "shadow-[0_0_40px_-8px_rgba(148,163,184,0.35)]",
+  },
+];
+
+export function chamberById(id) {
+  return CHAMBERS.find((c) => c.id === id) || null;
+}
