@@ -1,7 +1,10 @@
 import axios from "axios";
 
+/** Dev: unset → `/api` (Vite proxy). Production: public API origin, e.g. `https://codearena-api.onrender.com` */
+const API_ORIGIN = String(import.meta.env.VITE_API_ORIGIN ?? "").replace(/\/$/, "");
+
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: API_ORIGIN ? `${API_ORIGIN}/api` : "/api",
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
 });

@@ -112,6 +112,33 @@ Language → Judge0 `language_id`: `server/src/config/languages.js`
 
 GitHub Actions (`.github/workflows/ci.yml`) installs dependencies and runs the **client** production build. Add server tests or lint as you grow the suite.
 
+## Deploying (Vercel frontend + hosted API)
+
+**Recommended split:** Put the **Vite client** on **Vercel** and run the **Express API** on a Node-friendly host (e.g. [Render](https://render.com), [Railway](https://railway.app), [Fly.io](https://fly.io)).  
+Your stack uses a normal long-lived Node process, MongoDB, Judge0, and optional WebSockets—**do not** try to run the full `server/` as-is on Vercel serverless; that pattern breaks Socket.IO, long requests, and adds cold-start pain.
+
+### 1) Deploy the API first
+
+1. Create a **Web Service** (or equivalent), root **`server/`**, build optional, start: `npm install && npm start` (or `node src/index.js`).
+2. Set **`server/.env`** on the host (Atlas URI, `JWT_SECRET`, `GROQ_*`, `JUDGE0_*`, Razorpay, etc.).
+3. Set **`CLIENT_URL`** to your **exact** Vercel URL once you have it, e.g. `https://codearena-x.vercel.app` (no trailing slash). CORS uses this single origin with credentials.
+4. Set **`NODE_ENV=production`**.
+5. If you use **Google OAuth**, add the production **`GOOGLE_CALLBACK_URL`** and register that redirect URL in the Google Cloud console.
+
+### 2) Deploy the client on Vercel
+
+1. Import the Git repo; set **Root Directory** to **`client`**.
+2. Framework: **Vite** (or Other; **Build**: `npm run build`, **Output**: `dist`).
+3. **Environment variable:** `VITE_API_ORIGIN` = your API’s public HTTPS origin **without** a path, e.g. `https://codearena-x-api.onrender.com` (must match what you used in step 1).
+
+`client/vercel.json` already includes SPA **rewrites** so React Router routes work.  
+Locally, leave `VITE_API_ORIGIN` unset so requests still use `/api` via the Vite proxy.
+
+### 3) After deploy
+
+- Open `https://<vercel-app>/api/health` in the browser **only if** you rewrite `/api` on Vercel (you should **not** for this setup); health checks should hit **`https://<api-host>/api/health`**.
+- Confirm login and Judge0 from the live site. If CORS errors appear, **`CLIENT_URL`** on the server must exactly match the browser address bar origin.
+
 ## Docker
 
 `docker-compose.yml` can start a local **Mongo** instance. The app is usually pointed at **Atlas** in production.
