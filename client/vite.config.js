@@ -6,9 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    proxy: {
-      "/api": { target: "http://localhost:5000", changeOrigin: true },
-      "/socket.io": { target: "http://localhost:5000", ws: true },
-    },
+    // API calls use absolute BASE_URL from client/src/services/api.js (VITE_API_ORIGIN or http://localhost:5000 in dev).
+    // No dev proxy to /api — avoids same-origin /api resembling production Vercel.
   },
 });

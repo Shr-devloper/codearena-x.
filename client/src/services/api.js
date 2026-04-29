@@ -1,13 +1,14 @@
 import axios from "axios";
 
 /**
- * Public API origin only (no path). Vercel: set VITE_API_ORIGIN=https://your-api.onrender.com
- * Dev without env: http://localhost:5000 (matches typical API port; ensure CLIENT_URL includes http://localhost:5173 on the server).
+ * Central API origin: Vercel must set VITE_API_ORIGIN=https://your-backend.example.com
+ * (no trailing slash, no /api path — that segment is added below for the Express mount).
  */
-function resolveApiOrigin() {
-  const raw = import.meta.env.VITE_API_ORIGIN;
-  if (raw != null && String(raw).trim() !== "") {
-    return String(raw).trim().replace(/\/$/, "");
+const VITE_API_ORIGIN = import.meta.env.VITE_API_ORIGIN;
+
+function resolveBaseUrl() {
+  if (VITE_API_ORIGIN != null && String(VITE_API_ORIGIN).trim() !== "") {
+    return String(VITE_API_ORIGIN).trim().replace(/\/$/, "");
   }
   if (import.meta.env.DEV) {
     return "http://localhost:5000";
@@ -15,26 +16,38 @@ function resolveApiOrigin() {
   return "";
 }
 
-export const API_BASE_ORIGIN = resolveApiOrigin();
+/** Backend origin only — all API traffic must use this + `/api` on the server, never same-origin `/api` on Vercel. */
+export const BASE_URL = resolveBaseUrl();
 
-if (import.meta.env.PROD && !API_BASE_ORIGIN) {
+/** @deprecated Use BASE_URL */
+export const API_BASE_ORIGIN = BASE_URL;
+
+if (import.meta.env.PROD && !BASE_URL) {
   console.error(
     "[CodeArena] Missing VITE_API_ORIGIN. Set it in Vercel to your backend URL (e.g. https://codearena-api.onrender.com)."
   );
 }
 
+/** Express mounts routes at `/api`; full axios base is backend origin + that mount — always absolute in production when env is set. */
+const API_MOUNT = "/api";
 const apiRoot =
-  API_BASE_ORIGIN !== ""
-    ? `${API_BASE_ORIGIN}/api`
+  BASE_URL !== ""
+    ? `${BASE_URL}${API_MOUNT}`
     : import.meta.env.DEV
-      ? `http://localhost:5000/api`
-      : "https://configure-env-vite-api-origin.invalid/api";
+      ? `http://localhost:5000${API_MOUNT}`
+      : `https://configure-env-vite-api-origin.invalid${API_MOUNT}`;
 
-const api = axios.create({
+const apiH = axios.create({
   baseURL: apiRoot,
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
 });
+
+/** Absolute URL for a backend path under `/api` (e.g. `apiUrl("/auth/login")`). Prefer the default `api` client. */
+export function apiUrl(path) {
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return `${apiRoot}${p}`;
+}
 
 /** Dev or VITE_DEBUG_AUTH=true: auth integration logs */
 export function authDebug(label, detail) {
@@ -54,28 +67,29 @@ export function getApiErrorMessage(err, fallback = "Something went wrong") {
     msg === "Network Error" ||
     !err?.response
   ) {
-    return "Cannot reach the API. Check VITE_API_ORIGIN on Vercel, that the server is up, and GET /api/health in a browser.";
+    return "Cannot reach the API. Check VITE_API_ORIGIN on Vercel, that the server is up, and open GET /api/health on your backend host (not the Vercel URL).";
   }
   return fallback;
 }
 
 export function setAuthToken(token) {
   if (token) {
-    api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    apiH.defaults.headers.common.Authorization = `Bearer ${token}`;
     localStorage.setItem("cax_token", token);
     authDebug("Token stored (length)", token.length);
   } else {
-    delete api.defaults.headers.common.Authorization;
+    delete apiH.defaults.headers.common.Authorization;
     localStorage.removeItem("cax_token");
     authDebug("Token cleared");
   }
 }
 
-api.interceptors.response.use(
+apiH.interceptors.response.use(
   (res) => res,
   (err) => {
     if (import.meta.env.DEV || import.meta.env.VITE_DEBUG_AUTH === "true") {
-      const url = err.config?.baseURL && err.config?.url ? `${err.config.baseURL}${err.config.url}` : err.config?.url;
+      const url =
+        err.config?.baseURL && err.config?.url ? `${err.config.baseURL}${err.config.url}` : err.config?.url;
       authDebug("API error", {
         url,
         status: err.response?.status,
@@ -89,4 +103,4 @@ api.interceptors.response.use(
 const existing = localStorage.getItem("cax_token");
 if (existing) setAuthToken(existing);
 
-export default api;
+export default apiH;
