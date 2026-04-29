@@ -15,7 +15,11 @@ else dotenv.config();
 const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   PORT: z.coerce.number().default(5000),
-  CLIENT_URL: z.string().url().default("http://localhost:5173"),
+  CLIENT_URL: z
+    .string()
+    .url()
+    .default("http://localhost:5173")
+    .transform((s) => s.replace(/\/$/, "") || s),
   MONGODB_URI: z.string().min(1),
   /** Default namespace for all collections (e.g. problems, users, submissions). */
   MONGODB_DB_NAME: z

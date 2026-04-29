@@ -1,24 +1,44 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Code2 } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
+import { getApiErrorMessage } from "../services/api.js";
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, setError } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [params] = useSearchParams();
   const nav = useNavigate();
+
+  useEffect(() => {
+    const q = params.get("error");
+    const msg = params.get("message");
+    if (q === "oauth" || q === "session") {
+      setErr(
+        msg ||
+          (q === "session"
+            ? "Could not complete sign-in. Try again or use email and password."
+            : "Sign-in was interrupted. Try again.")
+      );
+    }
+  }, [params]);
 
   async function onSubmit(e) {
     e.preventDefault();
     setErr("");
+    setError(null);
+    setSubmitting(true);
     try {
       await login(email, password);
-      nav("/dashboard");
+      nav("/dashboard", { replace: true });
     } catch (x) {
-      setErr(x.response?.data?.error || "Login failed");
+      setErr(getApiErrorMessage(x, "Login failed"));
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -37,18 +57,39 @@ export default function Login() {
       >
         <h1 className="font-display text-2xl font-bold text-white">Welcome back</h1>
         <p className="mt-1 text-sm text-slate-400">Sign in to your workspace.</p>
-        <form onSubmit={onSubmit} className="mt-8 space-y-4">
+        <form className="mt-8 space-y-4" onSubmit={onSubmit}>
           <div>
             <label className="text-xs font-medium text-slate-400">Email</label>
-            <input className="input mt-1" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input
+              className="input mt-1"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+              disabled={submitting}
+            />
           </div>
           <div>
             <label className="text-xs font-medium text-slate-400">Password</label>
-            <input className="input mt-1" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <input
+              className="input mt-1"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+              disabled={submitting}
+            />
           </div>
           {err && <p className="text-sm text-rose-400">{err}</p>}
-          <motion.button type="submit" className="btn-primary w-full" whileTap={{ scale: 0.99 }}>
-            Sign in
+          <motion.button
+            type="submit"
+            className="btn-primary w-full disabled:opacity-60"
+            whileTap={{ scale: submitting ? 1 : 0.99 }}
+            disabled={submitting}
+          >
+            {submitting ? "Signing in…" : "Sign in"}
           </motion.button>
         </form>
         <p className="mt-6 text-center text-sm text-slate-500">

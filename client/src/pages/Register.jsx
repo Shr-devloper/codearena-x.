@@ -3,23 +3,29 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Code2 } from "lucide-react";
 import { useAuth } from "../context/AuthContext.jsx";
+import { getApiErrorMessage } from "../services/api.js";
 
 export default function Register() {
-  const { register } = useAuth();
+  const { register, setError } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const nav = useNavigate();
 
   async function onSubmit(e) {
     e.preventDefault();
     setErr("");
+    setError(null);
+    setSubmitting(true);
     try {
       await register(name, email, password);
-      nav("/dashboard");
+      nav("/dashboard", { replace: true });
     } catch (x) {
-      setErr(x.response?.data?.error || "Registration failed");
+      setErr(getApiErrorMessage(x, "Registration failed"));
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -38,22 +44,51 @@ export default function Register() {
       >
         <h1 className="font-display text-2xl font-bold text-white">Create account</h1>
         <p className="mt-1 text-sm text-slate-400">Build your profile in a minute.</p>
-        <form onSubmit={onSubmit} className="mt-8 space-y-4">
+        <form className="mt-8 space-y-4" onSubmit={onSubmit}>
           <div>
             <label className="text-xs font-medium text-slate-400">Name</label>
-            <input className="input mt-1" value={name} onChange={(e) => setName(e.target.value)} required />
+            <input
+              className="input mt-1"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              autoComplete="name"
+              disabled={submitting}
+            />
           </div>
           <div>
             <label className="text-xs font-medium text-slate-400">Email</label>
-            <input className="input mt-1" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input
+              className="input mt-1"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+              disabled={submitting}
+            />
           </div>
           <div>
             <label className="text-xs font-medium text-slate-400">Password</label>
-            <input className="input mt-1" type="password" value={password} onChange={(e) => setPassword(e.target.value)} minLength={8} required />
+            <input
+              className="input mt-1"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              minLength={8}
+              required
+              autoComplete="new-password"
+              disabled={submitting}
+            />
           </div>
           {err && <p className="text-sm text-rose-400">{err}</p>}
-          <motion.button type="submit" className="btn-primary w-full" whileTap={{ scale: 0.99 }}>
-            Create account
+          <motion.button
+            type="submit"
+            className="btn-primary w-full disabled:opacity-60"
+            whileTap={{ scale: submitting ? 1 : 0.99 }}
+            disabled={submitting}
+          >
+            {submitting ? "Creating account…" : "Create account"}
           </motion.button>
         </form>
         <p className="mt-6 text-center text-sm text-slate-500">

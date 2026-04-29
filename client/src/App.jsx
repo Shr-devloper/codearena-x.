@@ -15,10 +15,19 @@ import InterviewSetup from "./pages/InterviewSetup.jsx";
 import InterviewSession from "./pages/InterviewSession.jsx";
 import InterviewResult from "./pages/InterviewResult.jsx";
 
+function AuthLoading() {
+  return (
+    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3 p-8 text-slate-400">
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-violet-500 border-t-transparent" aria-hidden />
+      <p className="text-sm">Loading workspace…</p>
+    </div>
+  );
+}
+
 function Protected({ children }) {
-  const { user, ready } = useAuth();
-  if (!ready) {
-    return <div className="p-8 text-slate-500 text-sm">Loading…</div>;
+  const { user, ready, loading } = useAuth();
+  if (loading || !ready) {
+    return <AuthLoading />;
   }
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -27,9 +36,9 @@ function Protected({ children }) {
 }
 
 function PublicOnly({ children }) {
-  const { user, ready } = useAuth();
-  if (!ready) {
-    return <div className="p-8 text-slate-500 text-sm">Loading…</div>;
+  const { user, ready, loading } = useAuth();
+  if (loading || !ready) {
+    return <AuthLoading />;
   }
   if (user) {
     return <Navigate to="/dashboard" replace />;
