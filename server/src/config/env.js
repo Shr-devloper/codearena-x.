@@ -23,7 +23,7 @@ const envSchema = z.object({
       try {
         return new URL(s.trim()).origin;
       } catch {
-        return "http://localhost:5173";
+        return "https://codearena-x-git-main-shr-devlopers-projects.vercel.app";
       }
     }),
   /**
