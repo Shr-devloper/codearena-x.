@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import passport from "passport";
-import { env, corsAllowedOrigins } from "./config/env.js";
+import { env, isCorsOriginAllowed } from "./config/env.js";
 import api from "./routes/index.js";
 import { notFoundHandler, errorHandler } from "./middleware/errorHandler.js";
 
@@ -18,12 +18,12 @@ export function createApp() {
           callback(null, true);
           return;
         }
-        if (corsAllowedOrigins.includes(origin)) {
+        if (isCorsOriginAllowed(origin)) {
           callback(null, true);
           return;
         }
         if (env.NODE_ENV === "development") {
-          console.warn("[CORS] Blocked Origin (add to CLIENT_URL or CORS_ORIGINS):", origin);
+          console.warn("[CORS] Blocked Origin:", origin);
         }
         callback(null, false);
       },

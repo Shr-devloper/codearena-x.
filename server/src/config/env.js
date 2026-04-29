@@ -23,17 +23,28 @@ const envSchema = z.object({
       try {
         return new URL(s.trim()).origin;
       } catch {
-        return "https://codearena-x.vercel.app";
+        return "http://localhost:5173";
       }
     }),
   /**
-   * Extra browser origins for CORS (comma-separated). Each value is normalized to scheme+host+port (exact match, no path).
-   * Use when the app is served from multiple origins (e.g. production Vercel + local dev hitting the same API).
+   * Extra browser origins for CORS (comma-separated). Normalized to scheme+host+port (exact match).
+   * Vercel preview URLs (*.vercel.app) are allowed when CORS_ALLOW_VERCEL_HOSTING is true.
    */
   CORS_ORIGINS: z
     .string()
     .optional()
     .transform((s) => (s == null || !String(s).trim() ? undefined : String(s).trim())),
+  /**
+   * Allow HTTPS origins on vercel.app (hostname is vercel.app or *.vercel.app). Enables preview + prod *.vercel.app URLs.
+   * Disable for strictest policy (only CLIENT_URL + CORS_ORIGINS + dev localhost).
+   */
+  CORS_ALLOW_VERCEL_HOSTING: z
+    .string()
+    .default("true")
+    .transform((s) => {
+      const t = s.trim().toLowerCase();
+      return t !== "0" && t !== "false" && t !== "no" && t !== "off";
+    }),
   MONGODB_URI: z.string().min(1),
   /** Default namespace for all collections (e.g. problems, users, submissions). */
   MONGODB_DB_NAME: z
@@ -113,7 +124,7 @@ function normalizeOriginInput(raw) {
   }
 }
 
-/** Exact browser `Origin` values allowed for `cors` + Socket.IO with `credentials: true` (no wildcard). */
+/** Exact-match CORS origins: CLIENT_URL + CORS_ORIGINS + localhost in development. */
 export const corsAllowedOrigins = (() => {
   const set = new Set();
   const push = (v) => {
@@ -132,8 +143,35 @@ export const corsAllowedOrigins = (() => {
   return [...set];
 })();
 
+/** True if Origin is a Vercel *.vercel.app deployment (HTTPS only; hostname rules prevent lookalike domains). */
+export function isVercelAppHttpsOrigin(origin) {
+  if (!origin || typeof origin !== "string") return false;
+  try {
+    const u = new URL(origin);
+    if (u.protocol !== "https:") return false;
+    const host = u.hostname.toLowerCase();
+    if (host === "vercel.app") return true;
+    return host.endsWith(".vercel.app");
+  } catch {
+    return false;
+  }
+}
+
+/** CORS + Socket.IO credential origins: explicit list and optionally all https://*.vercel.app when enabled. */
+export function isCorsOriginAllowed(origin) {
+  if (!origin) return true;
+  if (corsAllowedOrigins.includes(origin)) return true;
+  if (env.CORS_ALLOW_VERCEL_HOSTING && isVercelAppHttpsOrigin(origin)) return true;
+  return false;
+}
+
 if (env.NODE_ENV === "development") {
-  console.info("[CORS] Allowed origins:", corsAllowedOrigins.join(", "));
+  console.info(
+    "[CORS] Exact origins:",
+    corsAllowedOrigins.join(", "),
+    "| *.vercel.app (HTTPS):",
+    env.CORS_ALLOW_VERCEL_HOSTING ? "on" : "off"
+  );
 }
 
 export function isGroqConfigured() {
