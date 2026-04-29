@@ -3,7 +3,7 @@ import { Server } from "socket.io";
 import { createApp } from "./app.js";
 import "./models/index.js";
 import { connectDb } from "./config/db.js";
-import { env } from "./config/env.js";
+import { env, corsAllowedOrigins } from "./config/env.js";
 import { configurePassport } from "./config/passport.js";
 import { attachSocketIO } from "./websocket/index.js";
 
@@ -13,7 +13,7 @@ const app = createApp();
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: { origin: env.CLIENT_URL, methods: ["GET", "POST"] },
+  cors: { origin: corsAllowedOrigins, methods: ["GET", "POST"], credentials: true },
 });
 attachSocketIO(io);
 

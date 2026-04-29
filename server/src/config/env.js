@@ -19,7 +19,21 @@ const envSchema = z.object({
     .string()
     .url()
     .default("http://localhost:5173")
-    .transform((s) => s.replace(/\/$/, "") || s),
+    .transform((s) => {
+      try {
+        return new URL(s.trim()).origin;
+      } catch {
+        return "http://localhost:5173";
+      }
+    }),
+  /**
+   * Extra browser origins for CORS (comma-separated). Each value is normalized to scheme+host+port (exact match, no path).
+   * Use when the app is served from multiple origins (e.g. production Vercel + local dev hitting the same API).
+   */
+  CORS_ORIGINS: z
+    .string()
+    .optional()
+    .transform((s) => (s == null || !String(s).trim() ? undefined : String(s).trim())),
   MONGODB_URI: z.string().min(1),
   /** Default namespace for all collections (e.g. problems, users, submissions). */
   MONGODB_DB_NAME: z
@@ -89,6 +103,38 @@ if (!parsed.success) {
 }
 
 export const env = parsed.data;
+
+function normalizeOriginInput(raw) {
+  if (raw == null || !String(raw).trim()) return null;
+  try {
+    return new URL(String(raw).trim()).origin;
+  } catch {
+    return null;
+  }
+}
+
+/** Exact browser `Origin` values allowed for `cors` + Socket.IO with `credentials: true` (no wildcard). */
+export const corsAllowedOrigins = (() => {
+  const set = new Set();
+  const push = (v) => {
+    const n = normalizeOriginInput(v);
+    if (n) set.add(n);
+  };
+  push(env.CLIENT_URL);
+  if (env.CORS_ORIGINS) {
+    for (const part of env.CORS_ORIGINS.split(",")) {
+      push(part);
+    }
+  }
+  if (env.NODE_ENV === "development") {
+    push("http://localhost:5173");
+  }
+  return [...set];
+})();
+
+if (env.NODE_ENV === "development") {
+  console.info("[CORS] Allowed origins:", corsAllowedOrigins.join(", "));
+}
 
 export function isGroqConfigured() {
   return Boolean(env.GROQ_API_KEY && env.GROQ_API_KEY.length > 0);
